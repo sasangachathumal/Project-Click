@@ -1,0 +1,2771 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package biz.project.cms.view.order;
+
+import biz.project.cms.controller.CustomerController;
+import biz.project.cms.controller.BatchController;
+import biz.project.cms.controller.CategoryController;
+import biz.project.cms.controller.CustomerSerialController;
+import biz.project.cms.controller.DealerSerialController;
+import biz.project.cms.controller.GrnController;
+import biz.project.cms.controller.ItemController;
+import biz.project.cms.controller.OrderController;
+import biz.project.cms.controller.OrderDetailController;
+import biz.project.cms.fileaccess.LoggerFileAcceess;
+import biz.project.cms.fileaccess.OrderFileAccess;
+import biz.project.cms.fileaccess.OrderSerialFileAccess;
+import biz.project.cms.model.Batch;
+import biz.project.cms.model.Category;
+import biz.project.cms.model.Customer;
+import biz.project.cms.model.CustomerSerial;
+import biz.project.cms.model.DealerSerial;
+import biz.project.cms.model.Item;
+import biz.project.cms.model.ItemBatch;
+import biz.project.cms.model.OrderDetail;
+import biz.project.cms.model.Orders;
+import biz.project.cms.model.TempOrder;
+import biz.project.cms.model.TempSerial;
+import biz.project.cms.model.User;
+import biz.project.cms.other.IdGenerator;
+import biz.project.cms.other.SearchCombo;
+import biz.project.cms.view.grn.AddWarranty;
+import biz.project.cms.view.other.Progress;
+import biz.project.cms.view.other.Shorcuts;
+import biz.project.cms.other.Validation;
+import biz.project.cms.view.main.HomeFrame;
+import java.awt.Color;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.HeadlessException;
+import java.awt.Toolkit;
+import java.awt.event.ItemEvent;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicMenuBarUI;
+import javax.swing.table.DefaultTableModel;
+
+/**
+ *
+ * @author Dilhan
+ */
+public class MakeCustomerOrder extends javax.swing.JFrame {
+
+    private DefaultTableModel dtm;
+    private HashMap<String, ArrayList<TempSerial>> hashMap;
+    private int clickIndex = -1;
+    private final StringWriter sw;
+    private User user;
+    private static final OrderFileAccess FILE_ACCESS = new OrderFileAccess();
+    private static final OrderSerialFileAccess SERIAL_FILE_ACCESS = new OrderSerialFileAccess();
+    private Customer customer2;
+
+    /**
+     * Creates new form MakeCustomerOrder
+     */
+    public MakeCustomerOrder() {
+        sw = new StringWriter();
+        initComponents();
+        this.setIconImage(new ImageIcon(getClass().getResource("/image/Home/Logo Company.png")).getImage());
+        user = HomeFrame.user;
+        //
+        UIManager UI = new UIManager();
+        UI.put("OptionPane.background", Color.white);
+        UI.put("Panel.background", Color.white);
+        //
+        setExtendedState(MAXIMIZED_BOTH);
+        try {
+            getNewOrderId();
+        } catch (SQLException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+        fillComboItem();
+        fillCatComboItem();
+        hashMap = new HashMap<>();
+        customer2 = new Customer(1, "Annonimous", 0, "0V");
+        // setSize(Toolkit.getDefaultToolkit().getScreenSize().width,
+        // Toolkit.getDefaultToolkit().getScreenSize().height - 40);
+        SearchCombo combo = new SearchCombo();
+        combo.setSearchableCombo(comboDesc, true, "No such item found !", true);
+
+        tableOrderDetail.setOpaque(true);
+        tableOrderDetail.setFillsViewportHeight(true);
+        tableOrderDetail.setBackground(Color.WHITE);
+        //--------------
+        item.setOpaque(true);
+        item.setUI(new BasicMenuBarUI() {
+            @Override
+            public void paint(Graphics g, JComponent c) {
+                g.setColor(Color.WHITE);
+                g.fillRect(0, 0, c.getWidth(), c.getHeight());
+            }
+        });
+        //---------------
+        txtUser.setText(HomeFrame.user.getUsername());
+        txtBarcode.requestFocus();
+        txtBarcode.selectAll();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jMenuItem16 = new javax.swing.JMenuItem();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        txtOID = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        txtunit = new javax.swing.JTextField();
+        txtSellingPrice = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        jLabel25 = new javax.swing.JLabel();
+        txtQOH = new javax.swing.JTextField();
+        jLabel26 = new javax.swing.JLabel();
+        txtQty = new javax.swing.JTextField();
+        comboCategory = new javax.swing.JComboBox();
+        txtCode = new javax.swing.JTextField();
+        txtBarcode = new javax.swing.JTextField();
+        comboDesc = new javax.swing.JComboBox();
+        comboBatch = new javax.swing.JComboBox();
+        txtMinPrice = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jLabel13 = new javax.swing.JLabel();
+        txtState = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel20 = new javax.swing.JLabel();
+        txtPeriod = new javax.swing.JTextField();
+        jLabel21 = new javax.swing.JLabel();
+        comboSerails = new javax.swing.JComboBox();
+        jPanel7 = new javax.swing.JPanel();
+        jLabel19 = new javax.swing.JLabel();
+        jLabel30 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
+        txtNIC = new javax.swing.JTextField();
+        txtMobile = new javax.swing.JTextField();
+        chkNic = new javax.swing.JCheckBox();
+        btnRemove = new javax.swing.JButton();
+        btnAdd = new javax.swing.JButton();
+        jSeparator1 = new javax.swing.JSeparator();
+        chkWholeSale = new javax.swing.JCheckBox();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tableOrderDetail = new javax.swing.JTable();
+        txtDiscount = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        lblTotal = new javax.swing.JLabel();
+        txtTotal = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        txtUser = new javax.swing.JTextField();
+        btnPlace = new javax.swing.JButton();
+        item = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem17 = new javax.swing.JMenuItem();
+        jMenuItem13 = new javax.swing.JMenuItem();
+        chkRequestFocuds = new javax.swing.JMenu();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem14 = new javax.swing.JMenuItem();
+        jMenuItem15 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem18 = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem1 = new javax.swing.JMenuItem();
+
+        jMenuItem16.setText("jMenuItem16");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("POS - INVOICE");
+        setMinimumSize(new java.awt.Dimension(1024, 720));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setMaximumSize(new java.awt.Dimension(1024, 720));
+        jPanel1.setMinimumSize(new java.awt.Dimension(1024, 720));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(79, 76, 76));
+        jLabel1.setText("Order ID : ");
+
+        txtOID.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        txtOID.setForeground(new java.awt.Color(102, 102, 102));
+        txtOID.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtOID.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        jPanel2.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel4.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("sansserif", 1, 12), new java.awt.Color(153, 153, 255)), "Item Info ", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 12), new java.awt.Color(102, 102, 255))); // NOI18N
+        jPanel4.setPreferredSize(new java.awt.Dimension(340, 267));
+
+        jLabel4.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel4.setText("Item Code :");
+
+        jLabel6.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel6.setText("Description :");
+
+        jLabel8.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel8.setText("Catogory :");
+
+        jLabel9.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel9.setText("Unit Price :");
+
+        txtunit.setEditable(false);
+        txtunit.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtunit.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtunit.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtunit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtunitActionPerformed(evt);
+            }
+        });
+
+        txtSellingPrice.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtSellingPrice.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtSellingPrice.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtSellingPrice.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtSellingPriceFocusGained(evt);
+            }
+        });
+        txtSellingPrice.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtSellingPriceActionPerformed(evt);
+            }
+        });
+        txtSellingPrice.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtSellingPriceKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtSellingPriceKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSellingPriceKeyTyped(evt);
+            }
+        });
+
+        jLabel22.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel22.setText("Batch :");
+
+        jLabel23.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel23.setText("Sel. Price :");
+
+        jLabel24.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel24.setText(" Barcode :");
+
+        jLabel25.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel25.setText("Batch Qty. :");
+
+        txtQOH.setEditable(false);
+        txtQOH.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtQOH.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtQOH.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtQOH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtQOHActionPerformed(evt);
+            }
+        });
+
+        jLabel26.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel26.setText("Req.Qty :");
+
+        txtQty.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtQty.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtQty.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtQty.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtQtyFocusLost(evt);
+            }
+        });
+        txtQty.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtQtyActionPerformed(evt);
+            }
+        });
+        txtQty.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtQtyKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtQtyKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtQtyKeyTyped(evt);
+            }
+        });
+
+        comboCategory.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
+        comboCategory.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboCategory.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboCategoryItemStateChanged(evt);
+            }
+        });
+
+        txtCode.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtCode.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtCode.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtCode.setSelectionColor(new java.awt.Color(153, 153, 255));
+        txtCode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtCodeFocusGained(evt);
+            }
+        });
+        txtCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCodeActionPerformed(evt);
+            }
+        });
+        txtCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCodeKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCodeKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtCodeKeyTyped(evt);
+            }
+        });
+
+        txtBarcode.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtBarcode.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtBarcode.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtBarcode.setSelectionColor(new java.awt.Color(153, 153, 255));
+        txtBarcode.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtBarcodeFocusGained(evt);
+            }
+        });
+        txtBarcode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtBarcodeActionPerformed(evt);
+            }
+        });
+        txtBarcode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBarcodeKeyReleased(evt);
+            }
+        });
+
+        comboDesc.setEditable(true);
+        comboDesc.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
+        comboDesc.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboDesc.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboDescItemStateChanged(evt);
+            }
+        });
+
+        comboBatch.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
+        comboBatch.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBatch.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboBatchItemStateChanged(evt);
+            }
+        });
+        comboBatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBatchActionPerformed(evt);
+            }
+        });
+
+        txtMinPrice.setEditable(false);
+        txtMinPrice.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtMinPrice.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtMinPrice.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtMinPrice.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtMinPriceKeyPressed(evt);
+            }
+        });
+
+        jLabel31.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel31.setText("Min. Price :");
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel25, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel4Layout.createSequentialGroup()
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(txtunit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(comboBatch, javax.swing.GroupLayout.Alignment.LEADING, 0, 160, Short.MAX_VALUE)
+                            .addComponent(txtCode, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtQOH))
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel26, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel23, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(jLabel31, javax.swing.GroupLayout.Alignment.TRAILING)))
+                            .addGroup(jPanel4Layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel24)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtBarcode, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(txtMinPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(txtSellingPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                            .addComponent(txtQty, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)))
+                    .addComponent(comboCategory, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(comboDesc, javax.swing.GroupLayout.Alignment.TRAILING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel4Layout.createSequentialGroup()
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jLabel24)
+                    .addComponent(txtCode, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboCategory, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel8))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(comboDesc, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel22, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(comboBatch, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtMinPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel31))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel9)
+                    .addComponent(txtunit, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSellingPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel23))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel25)
+                    .addComponent(txtQOH, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtQty, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel26))
+                .addGap(18, 18, 18))
+        );
+
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+
+        jPanel6.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Warranty / Serial Numbers", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 12), new java.awt.Color(102, 102, 255))); // NOI18N
+        jPanel6.setPreferredSize(new java.awt.Dimension(340, 146));
+
+        jLabel13.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel13.setText(" S/N :");
+
+        txtState.setEditable(false);
+        txtState.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtState.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtState.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtState.setCaretColor(new java.awt.Color(116, 7, 7));
+
+        jLabel16.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel16.setText("Status :");
+
+        jLabel20.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel20.setForeground(new java.awt.Color(184, 180, 180));
+        jLabel20.setText("Days ");
+
+        txtPeriod.setEditable(false);
+        txtPeriod.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtPeriod.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtPeriod.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtPeriod.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtPeriod.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtPeriodKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtPeriodKeyTyped(evt);
+            }
+        });
+
+        jLabel21.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel21.setText("Period :");
+
+        comboSerails.setFont(new java.awt.Font("sansserif", 0, 13)); // NOI18N
+        comboSerails.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboSerails.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                comboSerailsItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
+        jPanel6.setLayout(jPanel6Layout);
+        jPanel6Layout.setHorizontalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addGap(22, 22, 22)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel21, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(7, 7, 7)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addComponent(txtPeriod, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel20)
+                        .addGap(38, 38, 38)
+                        .addComponent(jLabel16)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtState, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
+                    .addComponent(comboSerails, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel6Layout.setVerticalGroup(
+            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboSerails, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtPeriod, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel20)
+                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtState, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel21, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(7, 7, 7))
+        );
+
+        jPanel7.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(""), "Customer Info", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("sansserif", 1, 12), new java.awt.Color(102, 102, 255))); // NOI18N
+        jPanel7.setPreferredSize(new java.awt.Dimension(340, 103));
+
+        jLabel19.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel19.setText("NIC :");
+
+        jLabel30.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel30.setText("Mobile :");
+
+        jLabel17.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel17.setText("Name :");
+
+        txtName.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtName.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtName.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNameActionPerformed(evt);
+            }
+        });
+        txtName.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNameKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNameKeyTyped(evt);
+            }
+        });
+
+        txtNIC.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNIC.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtNIC.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtNIC.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNICActionPerformed(evt);
+            }
+        });
+        txtNIC.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNICKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtNICKeyTyped(evt);
+            }
+        });
+
+        txtMobile.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtMobile.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtMobile.setCaretColor(new java.awt.Color(116, 7, 7));
+        txtMobile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtMobileActionPerformed(evt);
+            }
+        });
+        txtMobile.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtMobileKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtMobileKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtMobileKeyTyped(evt);
+            }
+        });
+
+        chkNic.setBackground(new java.awt.Color(255, 255, 255));
+        chkNic.setFont(new java.awt.Font("sansserif", 0, 10)); // NOI18N
+
+        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
+        jPanel7.setLayout(jPanel7Layout);
+        jPanel7Layout.setHorizontalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel7Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel17)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(chkNic)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel19)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel7Layout.createSequentialGroup()
+                        .addComponent(txtNIC, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel30)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtMobile, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtName))
+                .addContainerGap())
+        );
+        jPanel7Layout.setVerticalGroup(
+            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel7Layout.createSequentialGroup()
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtNIC, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(chkNic, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel7Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel30)
+                            .addComponent(txtMobile, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, 31, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, 473, Short.MAX_VALUE)
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(36, Short.MAX_VALUE))
+        );
+
+        btnRemove.setBackground(new java.awt.Color(255, 255, 255));
+        btnRemove.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnRemove.setForeground(new java.awt.Color(51, 0, 0));
+        btnRemove.setText("REMOVE");
+        btnRemove.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRemove.setMaximumSize(new java.awt.Dimension(50, 30));
+        btnRemove.setMinimumSize(new java.awt.Dimension(50, 30));
+        btnRemove.setPreferredSize(new java.awt.Dimension(50, 30));
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
+
+        btnAdd.setBackground(new java.awt.Color(255, 255, 255));
+        btnAdd.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnAdd.setForeground(new java.awt.Color(51, 51, 0));
+        btnAdd.setText("ADD");
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setMaximumSize(new java.awt.Dimension(50, 30));
+        btnAdd.setMinimumSize(new java.awt.Dimension(50, 30));
+        btnAdd.setPreferredSize(new java.awt.Dimension(50, 30));
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
+
+        jSeparator1.setBackground(new java.awt.Color(248, 248, 248));
+        jSeparator1.setForeground(new java.awt.Color(248, 246, 246));
+
+        chkWholeSale.setBackground(new java.awt.Color(255, 255, 255));
+        chkWholeSale.setFont(new java.awt.Font("Arial", 0, 16)); // NOI18N
+        chkWholeSale.setForeground(new java.awt.Color(102, 102, 102));
+        chkWholeSale.setText("Wholesale");
+        chkWholeSale.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkWholeSaleItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, 527, Short.MAX_VALUE)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(10, 10, 10)
+                        .addComponent(chkWholeSale, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 117, Short.MAX_VALUE)
+                        .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jSeparator1))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, 235, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnRemove, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkWholeSale, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 6, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
+        );
+
+        jPanel3.setBackground(new java.awt.Color(255, 255, 255));
+
+        tableOrderDetail.setBackground(new java.awt.Color(246, 246, 255));
+        tableOrderDetail.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        tableOrderDetail.setForeground(new java.awt.Color(1, 1, 29));
+        tableOrderDetail.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Code", "BatchID", "Description", "Warranty", "Qty", "Unit Price", "Amount", "WA"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tableOrderDetail.setRowHeight(22);
+        tableOrderDetail.setSelectionBackground(new java.awt.Color(0, 204, 153));
+        tableOrderDetail.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        tableOrderDetail.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        tableOrderDetail.getTableHeader().setReorderingAllowed(false);
+        tableOrderDetail.addContainerListener(new java.awt.event.ContainerAdapter() {
+            public void componentAdded(java.awt.event.ContainerEvent evt) {
+                tableOrderDetailComponentAdded(evt);
+            }
+        });
+        tableOrderDetail.addHierarchyListener(new java.awt.event.HierarchyListener() {
+            public void hierarchyChanged(java.awt.event.HierarchyEvent evt) {
+                tableOrderDetailHierarchyChanged(evt);
+            }
+        });
+        tableOrderDetail.addAncestorListener(new javax.swing.event.AncestorListener() {
+            public void ancestorAdded(javax.swing.event.AncestorEvent evt) {
+                tableOrderDetailAncestorAdded(evt);
+            }
+            public void ancestorRemoved(javax.swing.event.AncestorEvent evt) {
+                tableOrderDetailAncestorRemoved(evt);
+            }
+            public void ancestorMoved(javax.swing.event.AncestorEvent evt) {
+            }
+        });
+        tableOrderDetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                tableOrderDetailMouseReleased(evt);
+            }
+        });
+        tableOrderDetail.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentShown(java.awt.event.ComponentEvent evt) {
+                tableOrderDetailComponentShown(evt);
+            }
+        });
+        tableOrderDetail.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                tableOrderDetailPropertyChange(evt);
+            }
+        });
+        tableOrderDetail.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tableOrderDetailKeyPressed(evt);
+            }
+        });
+        tableOrderDetail.addVetoableChangeListener(new java.beans.VetoableChangeListener() {
+            public void vetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {
+                tableOrderDetailVetoableChange(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableOrderDetail);
+        if (tableOrderDetail.getColumnModel().getColumnCount() > 0) {
+            tableOrderDetail.getColumnModel().getColumn(0).setResizable(false);
+            tableOrderDetail.getColumnModel().getColumn(0).setPreferredWidth(35);
+            tableOrderDetail.getColumnModel().getColumn(1).setResizable(false);
+            tableOrderDetail.getColumnModel().getColumn(1).setPreferredWidth(35);
+            tableOrderDetail.getColumnModel().getColumn(2).setResizable(false);
+            tableOrderDetail.getColumnModel().getColumn(2).setPreferredWidth(330);
+            tableOrderDetail.getColumnModel().getColumn(3).setResizable(false);
+            tableOrderDetail.getColumnModel().getColumn(3).setPreferredWidth(5);
+            tableOrderDetail.getColumnModel().getColumn(4).setResizable(false);
+            tableOrderDetail.getColumnModel().getColumn(4).setPreferredWidth(45);
+            tableOrderDetail.getColumnModel().getColumn(5).setResizable(false);
+            tableOrderDetail.getColumnModel().getColumn(5).setPreferredWidth(45);
+            tableOrderDetail.getColumnModel().getColumn(6).setResizable(false);
+            tableOrderDetail.getColumnModel().getColumn(6).setPreferredWidth(55);
+            tableOrderDetail.getColumnModel().getColumn(7).setMinWidth(0);
+            tableOrderDetail.getColumnModel().getColumn(7).setPreferredWidth(0);
+            tableOrderDetail.getColumnModel().getColumn(7).setMaxWidth(0);
+        }
+
+        txtDiscount.setFont(new java.awt.Font("sansserif", 3, 15)); // NOI18N
+        txtDiscount.setForeground(new java.awt.Color(102, 102, 102));
+        txtDiscount.setText("0.00");
+        txtDiscount.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtDiscount.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtDiscountFocusGained(evt);
+            }
+        });
+        txtDiscount.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtDiscountKeyReleased(evt);
+            }
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDiscountKeyTyped(evt);
+            }
+        });
+
+        jLabel27.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel27.setText("Discount : ");
+
+        lblTotal.setFont(new java.awt.Font("Arial", 1, 28)); // NOI18N
+        lblTotal.setForeground(new java.awt.Color(0, 0, 102));
+        lblTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTotal.setText("Rs. 0.00");
+
+        txtTotal.setEditable(false);
+        txtTotal.setBackground(new java.awt.Color(242, 242, 242));
+        txtTotal.setFont(new java.awt.Font("sansserif", 1, 16)); // NOI18N
+        txtTotal.setText("0.00");
+        txtTotal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        txtTotal.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtTotalActionPerformed(evt);
+            }
+        });
+
+        jLabel29.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel29.setText("Sub Total : ");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 982, Short.MAX_VALUE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addComponent(lblTotal, javax.swing.GroupLayout.DEFAULT_SIZE, 706, Short.MAX_VALUE)
+                        .addGap(27, 27, 27)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel27, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel29, javax.swing.GroupLayout.Alignment.TRAILING))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtDiscount, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                            .addComponent(txtTotal))))
+                .addContainerGap())
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(2, 2, 2)
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtDiscount, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                            .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(lblTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)))
+                .addContainerGap())
+        );
+
+        jLabel7.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(79, 76, 76));
+        jLabel7.setText("User : ");
+
+        txtUser.setEditable(false);
+        txtUser.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtUser.setForeground(new java.awt.Color(102, 102, 102));
+        txtUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtUser.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
+        btnPlace.setBackground(new java.awt.Color(255, 255, 255));
+        btnPlace.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        btnPlace.setForeground(new java.awt.Color(51, 51, 0));
+        btnPlace.setText("PLACE ORDER");
+        btnPlace.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPlace.setMaximumSize(new java.awt.Dimension(50, 30));
+        btnPlace.setMinimumSize(new java.awt.Dimension(50, 30));
+        btnPlace.setPreferredSize(new java.awt.Dimension(50, 30));
+        btnPlace.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPlaceActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtOID, javax.swing.GroupLayout.PREFERRED_SIZE, 148, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel7)
+                        .addGap(18, 18, 18)
+                        .addComponent(txtUser, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(btnPlace, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(4, 4, 4)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(5, 5, 5))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtUser, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(7, 7, 7)))
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtOID, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(2, 2, 2)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(btnPlace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        item.setBackground(new java.awt.Color(255, 153, 0));
+
+        jMenu1.setText("File");
+
+        jMenuItem17.setText("New Order");
+        jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem17ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem17);
+
+        jMenuItem13.setText("Restore");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem13);
+
+        item.add(jMenu1);
+
+        chkRequestFocuds.setText("Edit");
+
+        jMenuItem8.setText("Clear Table");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        chkRequestFocuds.add(jMenuItem8);
+
+        jMenuItem14.setText("Add Data");
+        jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem14ActionPerformed(evt);
+            }
+        });
+        chkRequestFocuds.add(jMenuItem14);
+
+        jMenuItem15.setText("Remove Data");
+        jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem15ActionPerformed(evt);
+            }
+        });
+        chkRequestFocuds.add(jMenuItem15);
+
+        item.add(chkRequestFocuds);
+
+        jMenu3.setPreferredSize(new java.awt.Dimension(0, 3));
+
+        jMenuItem3.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, 0));
+        jMenuItem3.setText("Sell Price");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem3);
+
+        jMenuItem2.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F12, 0));
+        jMenuItem2.setText("Insert Qty");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem2);
+
+        jMenuItem4.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
+        jMenuItem4.setText("Insert Code");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem4);
+
+        jMenuItem5.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, 0));
+        jMenuItem5.setText("Barcode");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem5);
+
+        jMenuItem7.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, 0));
+        jMenuItem7.setText("Description");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem7);
+
+        jMenuItem6.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem6.setText("Insert Customer");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem6);
+
+        jMenuItem10.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem10.setText("Clear All");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem10);
+
+        jMenuItem9.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F3, 0));
+        jMenuItem9.setText("Save");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem9);
+
+        jMenuItem18.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_INSERT, 0));
+        jMenuItem18.setText("Add to Table");
+        jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem18ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem18);
+
+        item.add(jMenu3);
+
+        jMenu4.setText("View");
+
+        jMenuItem12.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem12.setBackground(new java.awt.Color(255, 255, 255));
+        jMenuItem12.setText("Calculator");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem12);
+
+        jMenuItem11.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        jMenuItem11.setText("Shorcuts");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem11);
+        jMenu4.add(jSeparator2);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, 0));
+        jMenuItem1.setText("Full Screen");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem1);
+
+        item.add(jMenu4);
+
+        setJMenuBar(item);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 679, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        dtm = (DefaultTableModel) tableOrderDetail.getModel();
+        try {
+            ArrayList<TempOrder> allDetail = FILE_ACCESS.getAllDetail();
+            ArrayList<String[]> allDetail1 = SERIAL_FILE_ACCESS.getAllDetail();
+            if (allDetail != null && !allDetail.isEmpty()) {
+                int showConfirmDialog = JOptionPane.showConfirmDialog(this, "This action will load the last unsaved order detail.\n"
+                        + "If you've done changes in your database, this action will harm your database."
+                        + "\n\n Do you want to continue ?");
+                if (showConfirmDialog == 0) {
+                    hashMap = new HashMap<>();
+                    ArrayList<TempSerial> al;
+                    dtm.setRowCount(0);
+                    boolean contain;
+                    new Progress(null, true).setVisible(true);
+                    for (TempOrder detail : allDetail) {
+                        contain = false;
+                        if (allDetail1 != null) {
+                            for (String[] data : allDetail1) {
+                                if (detail.getBatch().equals("BT00" + data[0])) {
+                                    contain = true;
+                                    break;
+                                }
+                            }
+                        }
+                        if (detail.getWholeSale().equals("true")) {
+                            chkWholeSale.setSelected(true);
+                        } else {
+                            chkWholeSale.setSelected(false);
+                        }
+                        Object row[] = {detail.getCode(), detail.getBatch(), detail.getDesc(), contain,
+                            detail.getQty(), detail.getPrice(), detail.getAmount(), detail.getPeriod()};
+                        dtm.addRow(row);
+                    }
+                    chkWholeSale.setEnabled(false);
+                    if (allDetail1 != null) {
+                        for (String[] data : allDetail1) {
+                            if (hashMap.containsKey(data[0])) {
+                                hashMap.get(data[0]).add(new TempSerial(data[1], Integer.parseInt(data[2]), data[3], data[4]));
+                            } else {
+                                al = new ArrayList<>();
+                                al.add(new TempSerial(data[1], Integer.parseInt(data[2]), data[3], data[4]));
+                                hashMap.put(data[0], al);
+                            }
+                        }
+                    }
+                }
+
+                calcTotal();
+            } else {
+                JOptionPane.showMessageDialog(this, "You don't have an unsaved order !");
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        txtSellingPrice.requestFocus();
+        txtSellingPrice.selectAll();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        txtQty.requestFocus();
+        txtQty.selectAll();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        txtCode.requestFocus();
+        txtCode.selectAll();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        txtBarcode.requestFocus();
+        txtBarcode.selectAll();
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        comboDesc.requestFocus();
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        txtNIC.requestFocus();
+        txtNIC.selectAll();
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        comboDesc.setSelectedIndex(-1);
+        txtBarcode.selectAll();
+        txtCode.setText("");
+        txtSellingPrice.setText("");
+        txtQty.setText("");
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        btnPlace.doClick();
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        Shorcuts shortcuts = new Shorcuts(null, true);
+        shortcuts.setLocationRelativeTo(this);
+        shortcuts.setVisible(true);
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+        Runtime rs = Runtime.getRuntime();
+        try {
+            rs.exec("calc");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Sorry!!! Your system calculator is crashed.\nTry to open manually");
+        }
+    }//GEN-LAST:event_jMenuItem12ActionPerformed
+
+    private void txtunitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtunitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtunitActionPerformed
+
+    private void txtSellingPriceFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtSellingPriceFocusGained
+        txtSellingPrice.setBackground(Color.WHITE);
+    }//GEN-LAST:event_txtSellingPriceFocusGained
+
+    private void txtSellingPriceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSellingPriceActionPerformed
+        boolean isValid = checkSellingPrice();
+        if (isValid) {
+            txtQty.requestFocus();
+            txtQty.selectAll();
+        }
+        txtSellingPrice.setBackground(Color.WHITE);
+    }//GEN-LAST:event_txtSellingPriceActionPerformed
+
+    private void txtSellingPriceKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSellingPriceKeyReleased
+        Validation.priceText(txtSellingPrice);
+    }//GEN-LAST:event_txtSellingPriceKeyReleased
+
+    private void txtSellingPriceKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSellingPriceKeyTyped
+        Validation.priceText(txtSellingPrice);
+    }//GEN-LAST:event_txtSellingPriceKeyTyped
+
+    private void txtQtyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtQtyFocusLost
+        txtQty.setBackground(new Color(255, 255, 255));
+    }//GEN-LAST:event_txtQtyFocusLost
+
+    private void txtQtyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQtyActionPerformed
+        if (!txtQty.getText().isEmpty()) {
+            btnAdd.doClick();
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+            txtQty.setBackground(new Color(250, 110, 110));
+        }
+        if (txtCode.getText().isEmpty()) {
+            txtCode.requestFocus();
+        }
+    }//GEN-LAST:event_txtQtyActionPerformed
+
+    private void txtQtyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyReleased
+
+        txtQty.setBackground(Color.white);
+    }//GEN-LAST:event_txtQtyKeyReleased
+
+    private void comboCategoryItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboCategoryItemStateChanged
+        if (comboCategory.getSelectedIndex() != -1 && comboCategory.getSelectedIndex() != 0) {
+            try {
+                Category category = CategoryController.searchCategoryByName(comboCategory.getSelectedItem().toString());
+                if (category != null) {
+                    ArrayList<Item> item1 = ItemController.getItemsByCategory(category.getCatID() + "");
+                    if (item1 != null && !item1.isEmpty()) {
+                        comboDesc.removeAllItems();
+                        item1.stream().forEach((item2) -> {
+                            comboDesc.addItem(item2.getDesciption());
+                        });
+                    }
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace(new PrintWriter(sw));
+                String trace = sw.toString();
+                LoggerFileAcceess.exceptionLogger(trace);
+            }
+        } else if (comboCategory.getSelectedIndex() == 0) {
+            fillComboItem();
+        }
+    }//GEN-LAST:event_comboCategoryItemStateChanged
+
+    private void txtCodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtCodeFocusGained
+        txtCode.selectAll();
+    }//GEN-LAST:event_txtCodeFocusGained
+
+    private void txtCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodeActionPerformed
+        if (txtCode.getText().isEmpty()) {
+            Toolkit.getDefaultToolkit().beep();
+            txtCode.setBackground(new Color(255, 115, 115));
+            comboDesc.setSelectedIndex(-1);
+            txtBarcode.setText("");
+            txtSellingPrice.setText("");
+            txtQty.setText("");
+        } else {
+            try {
+                Item item1 = ItemController.searchIstemByCode(txtCode.getText());
+                if (item1 != null) {
+                    comboCategory.setSelectedIndex(0);
+                    for (int i = 0; i < comboDesc.getItemCount(); i++) {
+                        if (item1.getDesciption().equals(comboDesc.getItemAt(i).toString())) {
+                            comboDesc.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                    txtQty.requestFocus();
+                } else {
+                    Toolkit.getDefaultToolkit().beep();
+                    txtCode.setBackground(new Color(255, 115, 115));
+                    comboDesc.setSelectedIndex(-1);
+                    txtCode.selectAll();
+                    txtBarcode.setText("");
+                    txtSellingPrice.setText("");
+                    txtQty.setText("");
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace(new PrintWriter(sw));
+                String trace = sw.toString();
+                LoggerFileAcceess.exceptionLogger(trace);
+            }
+        }
+    }//GEN-LAST:event_txtCodeActionPerformed
+
+    private void txtCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodeKeyPressed
+
+    }//GEN-LAST:event_txtCodeKeyPressed
+
+    private void txtCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodeKeyReleased
+        txtCode.setBackground(new Color(255, 255, 255));
+    }//GEN-LAST:event_txtCodeKeyReleased
+
+    private void txtCodeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodeKeyTyped
+
+    }//GEN-LAST:event_txtCodeKeyTyped
+
+    private void txtBarcodeFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBarcodeFocusGained
+        txtBarcode.selectAll();
+    }//GEN-LAST:event_txtBarcodeFocusGained
+
+    private void txtBarcodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBarcodeActionPerformed
+        if (txtBarcode.getText().isEmpty()) {
+            Toolkit.getDefaultToolkit().beep();
+            txtBarcode.setBackground(new Color(250, 110, 110));
+            comboDesc.setSelectedIndex(-1);
+            txtCode.setText("");
+            txtSellingPrice.setText("");
+            txtQty.setText("");
+        } else {
+            try {
+                Item item1 = ItemController.searchItemBySerial(txtBarcode.getText());
+                if (item1 != null) {
+                    comboCategory.setSelectedIndex(0);
+                    for (int i = 0; i < comboDesc.getItemCount(); i++) {
+                        if (item1.getDesciption().equals(comboDesc.getItemAt(i).toString())) {
+                            comboDesc.setSelectedIndex(i);
+                            break;
+                        }
+                    }
+                    txtQty.requestFocus();
+                    txtBarcode.selectAll();
+                } else {
+                    Toolkit.getDefaultToolkit().beep();
+                    txtBarcode.setBackground(new Color(250, 110, 110));
+                    comboDesc.setSelectedIndex(-1);
+                    txtBarcode.selectAll();
+                    txtCode.setText("");
+                    txtSellingPrice.setText("");
+                    txtQty.setText("");
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace(new PrintWriter(sw));
+                String trace = sw.toString();
+                LoggerFileAcceess.exceptionLogger(trace);
+            }
+        }
+    }//GEN-LAST:event_txtBarcodeActionPerformed
+
+    private void txtBarcodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBarcodeKeyReleased
+        txtBarcode.setBackground(new Color(255, 255, 255));
+    }//GEN-LAST:event_txtBarcodeKeyReleased
+
+    private void comboDescItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboDescItemStateChanged
+        try {
+            getItemDetail(evt);
+        } catch (HeadlessException headlessException) {
+            JOptionPane.showMessageDialog(this, headlessException.getMessage());
+            headlessException.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }//GEN-LAST:event_comboDescItemStateChanged
+
+    private void getItemDetail(ItemEvent evt) throws HeadlessException {
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            if (comboDesc.getSelectedIndex() != -1) {
+                try {
+                    Item item2 = ItemController.searchItemByDesc(comboDesc.getSelectedItem().toString());
+                    if (item2 != null) {
+                        ArrayList<ItemBatch> itemBatches = BatchController.getItemBatches(item2.getCode());
+                        if (itemBatches != null && !itemBatches.isEmpty()) {
+                            comboBatch.removeAllItems();
+                            itemBatches.stream().forEach((batch) -> {
+                                comboBatch.addItem("BT00" + batch.getBid());
+                            });
+                            txtCode.setText(item2.getCode());
+                            txtBarcode.setText(item2.getSerial());
+                        } else {
+                            comboBatch.removeAllItems();
+                            comboSerails.removeAllItems();
+                            txtMinPrice.setText("");
+                            txtQOH.setText("");
+                            txtPeriod.setText("");
+                            txtState.setText("");
+                            txtBarcode.setText("");
+                            txtCode.setText("");
+                            txtunit.setText("");
+                            txtSellingPrice.setText("");
+                            txtQty.setText("");
+                        }
+                    }
+                } catch (ClassNotFoundException | SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    ex.printStackTrace(new PrintWriter(sw));
+                    String trace = sw.toString();
+                    LoggerFileAcceess.exceptionLogger(trace);
+                }
+            } else {
+                comboBatch.removeAllItems();
+                comboSerails.removeAllItems();
+                txtMinPrice.setText("");
+                txtQOH.setText("");
+                txtPeriod.setText("");
+                txtState.setText("");
+                txtBarcode.setText("");
+                txtCode.setText("");
+                txtunit.setText("");
+                txtSellingPrice.setText("");
+                txtQty.setText("");
+            }
+        }
+    }
+
+    private void comboBatchItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboBatchItemStateChanged
+        try {
+            if (comboBatch.getSelectedIndex() != -1) {
+                String[] split = comboBatch.getSelectedItem().toString().split("BT00");
+                try {
+                    Batch batch = BatchController.searchBatch(split[1]);
+                    if (batch != null) {
+                        int reserved = 0;
+                        dtm = (DefaultTableModel) tableOrderDetail.getModel();
+                        for (int i = 0; i < tableOrderDetail.getRowCount(); i++) {
+                            if (comboBatch.getSelectedItem().equals(dtm.getValueAt(i, 1))) {
+                                reserved = Integer.parseInt(dtm.getValueAt(i, 4).toString());
+                                break;
+                            }
+                            txtQty.requestFocus();
+                        }
+                        int availableQty = batch.getQty() - reserved;
+                        txtMinPrice.setText(batch.getListPrice() + "");
+                        txtunit.setText(batch.getUnitPrice() + "");
+                        txtQOH.setText(availableQty + "");
+                        setSerialNumbers(split[1]);
+                    }
+                } catch (ClassNotFoundException | SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    ex.printStackTrace(new PrintWriter(sw));
+                    String trace = sw.toString();
+                    LoggerFileAcceess.exceptionLogger(trace);
+                }
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }//GEN-LAST:event_comboBatchItemStateChanged
+
+    private void comboBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBatchActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBatchActionPerformed
+
+    private void comboSerailsItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboSerailsItemStateChanged
+        if (comboSerails.getSelectedIndex() != -1 && comboBatch.getSelectedIndex() != -1) {
+            String[] split = comboBatch.getSelectedItem().toString().split("BT00");
+            setWarrantyPeriods(comboSerails.getSelectedItem().toString(), split[1]);
+        }
+    }//GEN-LAST:event_comboSerailsItemStateChanged
+
+    private void txtNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNameActionPerformed
+        try {
+            if (!txtNIC.getText().isEmpty() && !txtName.getText().isEmpty() && !txtMobile.getText().isEmpty()) {
+                try {
+                    Customer customer = new Customer();
+                    customer.setContact(Integer.parseInt(txtMobile.getText()));
+                    customer.setName(txtName.getText());
+                    customer.setNic(txtNIC.getText());
+                    int addCustomer = CustomerController.addCustomer(customer);
+                    if (addCustomer > 0) {
+                        JOptionPane.showMessageDialog(this, "New customer added !");
+                    } else {
+                        Toolkit.getDefaultToolkit().beep();
+                        JOptionPane.showMessageDialog(this, "Add customer fail");
+                    }
+                } catch (ClassNotFoundException | SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    ex.printStackTrace(new PrintWriter(sw));
+                    String trace = sw.toString();
+                    LoggerFileAcceess.exceptionLogger(trace);
+                }
+            } else {
+                Toolkit.getDefaultToolkit().beep();
+            }
+        } catch (NumberFormatException | HeadlessException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }//GEN-LAST:event_txtNameActionPerformed
+
+    private void txtNICActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNICActionPerformed
+        if (!txtNIC.getText().isEmpty()) {
+            try {
+                Customer customer = CustomerController.searchCustomerByNIC(txtNIC.getText());
+                if (customer != null) {
+                    txtName.setText(customer.getName());
+                    txtMobile.setText(customer.getContact() + "");
+                } else {
+                    txtName.setText("");
+                    txtMobile.setText("");
+                    txtNIC.requestFocus();
+                    txtNIC.selectAll();
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace(new PrintWriter(sw));
+                String trace = sw.toString();
+                LoggerFileAcceess.exceptionLogger(trace);
+            }
+        }
+    }//GEN-LAST:event_txtNICActionPerformed
+
+    private void txtMobileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtMobileActionPerformed
+        if (!txtMobile.getText().isEmpty()) {
+            try {
+                Customer customer = CustomerController.searchCustomerByContact(Integer.parseInt(txtMobile.getText()));
+                if (customer != null) {
+                    txtName.setText(customer.getName());
+                    txtNIC.setText(customer.getNic());
+                } else {
+                    txtName.setText("");
+                    txtNIC.setText("");
+                    txtMobile.requestFocus();
+                    txtMobile.selectAll();
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace(new PrintWriter(sw));
+                String trace = sw.toString();
+                LoggerFileAcceess.exceptionLogger(trace);
+            }
+        }
+    }//GEN-LAST:event_txtMobileActionPerformed
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        removeTableData();
+        calcTotal();
+        if (tableOrderDetail.getRowCount() > 0) {
+            chkWholeSale.setEnabled(false);
+        } else {
+            chkWholeSale.setEnabled(true);
+        }
+    }//GEN-LAST:event_btnRemoveActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        if (comboDesc.getSelectedIndex() != -1 && !txtQty.getText().isEmpty() && comboBatch.getItemCount() > 0) {
+            addorderDetail();
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+            txtQty.requestFocus();
+        }
+        calcTotal();
+        if (tableOrderDetail.getRowCount() > 0) {
+            chkWholeSale.setEnabled(false);
+        } else {
+            chkWholeSale.setEnabled(true);
+        }
+        try {
+            getNewOrderId();
+        } catch (SQLException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void tableOrderDetailComponentAdded(java.awt.event.ContainerEvent evt) {//GEN-FIRST:event_tableOrderDetailComponentAdded
+
+    }//GEN-LAST:event_tableOrderDetailComponentAdded
+
+    private void tableOrderDetailHierarchyChanged(java.awt.event.HierarchyEvent evt) {//GEN-FIRST:event_tableOrderDetailHierarchyChanged
+
+    }//GEN-LAST:event_tableOrderDetailHierarchyChanged
+
+    private void tableOrderDetailAncestorAdded(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tableOrderDetailAncestorAdded
+
+    }//GEN-LAST:event_tableOrderDetailAncestorAdded
+
+    private void tableOrderDetailAncestorRemoved(javax.swing.event.AncestorEvent evt) {//GEN-FIRST:event_tableOrderDetailAncestorRemoved
+
+    }//GEN-LAST:event_tableOrderDetailAncestorRemoved
+
+    private void tableOrderDetailMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableOrderDetailMouseReleased
+        addViewSerial();
+    }//GEN-LAST:event_tableOrderDetailMouseReleased
+
+    private void addViewSerial() throws NumberFormatException {
+        try {
+            if (tableOrderDetail.getRowCount() > 0 && tableOrderDetail.getSelectedRow() != -1) {
+                clickIndex = tableOrderDetail.getSelectedRow();
+                dtm = (DefaultTableModel) tableOrderDetail.getModel();
+                String code = dtm.getValueAt(clickIndex, 0).toString();
+                String qty = dtm.getValueAt(clickIndex, 4).toString();
+                String[] batch = dtm.getValueAt(clickIndex, 1).toString().split("BT00");
+                ArrayList<DealerSerial> sList = new ArrayList<>();
+                boolean hasSerials = false;
+                try {
+                    sList = DealerSerialController.getAllDealerSerialByBatch(batch[1]);
+                    if (sList.size() > 0) {
+                        hasSerials = true;
+                        comboDesc.setSelectedIndex(-1);
+                        comboSerails.removeAllItems();
+                        for (DealerSerial sList1 : sList) {
+                            comboSerails.addItem(sList1.getSerial());
+                        }
+                        comboBatch.removeAllItems();
+                        comboBatch.addItem("BT00" + batch[1]);
+                        setWarrantyPeriods(comboSerails.getSelectedItem().toString(), batch[1]);
+                    } else {
+                        comboBatch.removeAllItems();
+                        comboSerails.removeAllItems();
+                        comboSerails.addItem("No Serial Found");
+                        txtMinPrice.setText("");
+                        txtQOH.setText("");
+                        txtPeriod.setText("");
+                        txtState.setText("");
+                        txtBarcode.setText("");
+                        txtCode.setText("");
+                        txtunit.setText("");
+                        txtSellingPrice.setText("");
+                        txtQty.setText("");
+                    }
+                } catch (ClassNotFoundException | SQLException ex) {
+                    JOptionPane.showMessageDialog(this, ex.getMessage());
+                    ex.printStackTrace(new PrintWriter(sw));
+                    String trace = sw.toString();
+                    LoggerFileAcceess.exceptionLogger(trace);
+                }
+                if (hasSerials) {
+                    AddWarranty warranty = new AddWarranty(this, true, this);
+                    warranty.setDetail(batch[1]);
+                    warranty.setMap(hashMap);
+                    warranty.setItemCount(Integer.parseInt(qty));
+                    warranty.setTitle(code, qty, sList, batch[1]);
+                    warranty.setVisible(true);
+                }
+            }
+        } catch (HeadlessException | NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void tableOrderDetailComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_tableOrderDetailComponentShown
+
+    }//GEN-LAST:event_tableOrderDetailComponentShown
+
+    private void tableOrderDetailPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_tableOrderDetailPropertyChange
+
+    }//GEN-LAST:event_tableOrderDetailPropertyChange
+
+    private void tableOrderDetailKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tableOrderDetailKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_DELETE) {
+            removeTableData();
+            calcTotal();
+        }
+    }//GEN-LAST:event_tableOrderDetailKeyPressed
+
+    private void tableOrderDetailVetoableChange(java.beans.PropertyChangeEvent evt)throws java.beans.PropertyVetoException {//GEN-FIRST:event_tableOrderDetailVetoableChange
+
+    }//GEN-LAST:event_tableOrderDetailVetoableChange
+
+    private void txtDiscountKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiscountKeyReleased
+        Validation.priceText(txtDiscount);
+        try {
+            if (!txtDiscount.getText().isEmpty()) {
+                if (Double.valueOf(txtTotal.getText()) <= Double.valueOf(txtDiscount.getText())) {
+                    getToolkit().beep();
+                    txtDiscount.setText("0.00");
+                    txtDiscount.selectAll();
+                }
+            }
+            calcTotal();
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }//GEN-LAST:event_txtDiscountKeyReleased
+
+    private void txtTotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtTotalActionPerformed
+
+    private void btnPlaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlaceActionPerformed
+        try {
+            if (tableOrderDetail.getRowCount() > 0) {
+                Customer customer = null;
+                if (!txtNIC.getText().isEmpty()) {
+                    try {
+                        customer = CustomerController.searchCustomerByNIC(txtNIC.getText());
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        ex.printStackTrace(new PrintWriter(sw));
+                        String trace = sw.toString();
+                        LoggerFileAcceess.exceptionLogger(trace);
+                    }
+                }
+                if (!txtMobile.getText().isEmpty() && customer == null) {
+                    try {
+                        customer = CustomerController.searchCustomerByContact(Integer.parseInt(txtMobile.getText()));
+                    } catch (ClassNotFoundException | SQLException ex) {
+                        JOptionPane.showMessageDialog(this, ex.getMessage());
+                        ex.printStackTrace(new PrintWriter(sw));
+                        String trace = sw.toString();
+                        LoggerFileAcceess.exceptionLogger(trace);
+                    }
+                }
+                if (customer == null) {
+                    if (txtName.getText().isEmpty()) {
+                        customer = new Customer(1, null, 0, null);
+                    } else {
+                        Customer c = new Customer();
+                        String nic;
+                        String mobile;
+                        String name = txtName.getText();
+                        if (!txtMobile.getText().isEmpty()) {
+                            mobile = txtMobile.getText();
+                            c.setContact(Integer.parseInt(mobile));
+                            if (!txtNIC.getText().isEmpty()) {
+                                nic = txtNIC.getText();
+                                c.setNic(nic);
+                            }
+                            c.setName(name);
+                            try {
+                                int addCustomer = CustomerController.addCustomerSpecialForOrders(c);
+                                if (addCustomer > 0) {
+                                    c.setCid(addCustomer);
+                                    customer = c;
+                                } else {
+                                    customer = new Customer();
+                                    customer.setCid(1);
+                                }
+                            } catch (ClassNotFoundException | SQLException ex) {
+                                JOptionPane.showMessageDialog(this, ex.getMessage());
+                                ex.printStackTrace(new PrintWriter(sw));
+                                String trace = sw.toString();
+                                LoggerFileAcceess.exceptionLogger(trace);
+                            }
+                        } else if (txtMobile.getText().isEmpty() && !txtName.getText().isEmpty()) {
+                            JOptionPane.showMessageDialog(this, "Mobile number is empty.\nOrder will be added as 'Annonimous' customer");
+                        }
+                    }
+                }
+
+                if (user == null) {
+                    user = new User();
+                    user.setUid(1);
+                }
+
+                Orders order = new Orders();
+                String[] tot = lblTotal.getText().split("Rs. ");
+                if (customer != null) {
+                    order.setCusId(customer.getCid());
+                } else {
+                    order.setCusId(1);
+                }
+                int m = 1;
+                if (chkWholeSale.isSelected()) {
+                    m = 0;
+                }
+                 getNewOrderId();
+                order.setId(txtOID.getText());
+                order.setDate(getDate());
+                order.setTime(getTime());
+                order.setUsrId(user.getUid());
+                order.setAmount(Double.valueOf(tot[1]));
+                order.setStatus(m);
+
+                ArrayList<OrderDetail> orderDetails = new ArrayList<>();
+                OrderDetail detail = new OrderDetail();
+                dtm = (DefaultTableModel) tableOrderDetail.getModel();
+                for (int i = 0; i < tableOrderDetail.getRowCount(); i++) {
+                    String[] split = dtm.getValueAt(i, 1).toString().split("BT00");
+                    detail.setItemCode(dtm.getValueAt(i, 0).toString());
+                    detail.setOrderId(txtOID.getText());
+                    detail.setQty(Integer.parseInt(dtm.getValueAt(i, 4).toString()));
+                    detail.setSoldPrice(Double.parseDouble(dtm.getValueAt(i, 5).toString()));
+                    detail.setBid(split[1]);
+                    orderDetails.add(detail);
+                    detail = new OrderDetail();
+                }
+                boolean placeOrder = placeOrder(order, orderDetails);
+                if (placeOrder) {
+                    AddOrderPay pay = new AddOrderPay(null, true);
+                    pay.setCID(order.getId());
+                    pay.setAmount(order.getAmount());
+                    pay.setCustomer(customer2);
+                    pay.setDiscount(txtDiscount.getText() + "");
+                    pay.setDtm(dtm);
+                    pay.setNetTotal(txtTotal.getText());
+                    pay.setSubTotal(order.getAmount());
+
+                    pay.setVisible(true);
+
+                    hashMap = new HashMap<>();
+                    clearFile();
+                    dtm.setRowCount(0);
+                    txtDiscount.setText("0.0");
+                    lblTotal.setText("Rs. 0.00");
+                    chkWholeSale.setEnabled(true);
+                    try {
+                        getNewOrderId();
+                    } catch (SQLException | ClassNotFoundException ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                        ex.printStackTrace(new PrintWriter(sw));
+                        String trace = sw.toString();
+                        LoggerFileAcceess.exceptionLogger(trace);
+                    }
+                    txtQty.setText("");
+                    txtNIC.setText("");
+                    txtName.setText("");
+                    txtMobile.setText("");
+                    txtPeriod.setText("");
+                    txtTotal.setText("0.0");
+                    txtState.setText("");
+                    comboSerails.removeAllItems();
+                    if (comboDesc.getSelectedIndex() != 0) {
+                        txtQOH.setText("");
+                        txtunit.setText("");
+                        txtSellingPrice.setText("");
+                        comboDesc.setSelectedIndex(0);
+                    }
+                    chkWholeSale.setSelected(false);
+                    txtBarcode.requestFocus();
+                    txtBarcode.selectAll();
+                } else {
+                    JOptionPane.showMessageDialog(this, "failed");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Please Add Item..");
+            }
+        } catch (HeadlessException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Invalid number input !\n" + e.getMessage());
+        } catch (SQLException ex) {
+            Logger.getLogger(MakeCustomerOrder.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(MakeCustomerOrder.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnPlaceActionPerformed
+
+    private void chkWholeSaleItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkWholeSaleItemStateChanged
+        if (chkWholeSale.isSelected()) {
+            chkWholeSale.setForeground(new Color(80, 200, 65));
+        } else {
+            chkWholeSale.setForeground(Color.gray);
+        }
+    }//GEN-LAST:event_chkWholeSaleItemStateChanged
+
+    private void txtQOHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtQOHActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtQOHActionPerformed
+
+    private void txtMinPriceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMinPriceKeyPressed
+
+    }//GEN-LAST:event_txtMinPriceKeyPressed
+
+    private void txtSellingPriceKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSellingPriceKeyPressed
+
+    }//GEN-LAST:event_txtSellingPriceKeyPressed
+
+    private void txtDiscountFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtDiscountFocusGained
+        txtDiscount.selectAll();
+    }//GEN-LAST:event_txtDiscountFocusGained
+
+    private void txtMobileKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMobileKeyTyped
+        Validation.phoneNumber(txtMobile, evt);
+    }//GEN-LAST:event_txtMobileKeyTyped
+
+    private void txtMobileKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMobileKeyReleased
+        Validation.phoneNumber(txtMobile, evt);
+    }//GEN-LAST:event_txtMobileKeyReleased
+
+    private void txtMobileKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtMobileKeyPressed
+    }//GEN-LAST:event_txtMobileKeyPressed
+
+    private void txtQtyKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyTyped
+
+        char c = evt.getKeyChar();
+        if (!Character.isDigit(c) && !(c == KeyEvent.VK_BACK_SPACE || c == KeyEvent.VK_DELETE || c == KeyEvent.VK_ENTER)) {
+            getToolkit().beep();
+            evt.consume();
+        }
+
+    }//GEN-LAST:event_txtQtyKeyTyped
+
+    private void txtQtyKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtQtyKeyPressed
+        char[] c1 = txtQty.getText().toCharArray();
+        if (c1.length > 4) {
+            getToolkit().beep();
+            txtQty.setText("");
+            txtQty.setBackground(new Color(1, 2, 3));
+        }
+    }//GEN-LAST:event_txtQtyKeyPressed
+
+    private void txtPeriodKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPeriodKeyTyped
+        Validation.limitesIntegers(txtPeriod, 4);
+    }//GEN-LAST:event_txtPeriodKeyTyped
+
+    private void txtNICKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNICKeyTyped
+        if (!chkNic.isSelected()) {
+            Validation.validateNIC(txtNIC);
+        } else {
+            Validation.validateNIC(txtNIC);
+        }
+    }//GEN-LAST:event_txtNICKeyTyped
+
+    private void txtNICKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNICKeyReleased
+        if (!chkNic.isSelected()) {
+            Validation.validateNIC(txtNIC);
+        } else {
+            Validation.validateNIC(txtNIC);
+        }
+    }//GEN-LAST:event_txtNICKeyReleased
+
+    private void txtNameKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyTyped
+        Validation.name(txtName);
+    }//GEN-LAST:event_txtNameKeyTyped
+
+    private void txtNameKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNameKeyReleased
+        Validation.name(txtName);
+    }//GEN-LAST:event_txtNameKeyReleased
+
+    private void txtDiscountKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiscountKeyTyped
+        Validation.priceText(txtDiscount);
+    }//GEN-LAST:event_txtDiscountKeyTyped
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        int i = JOptionPane.showConfirmDialog(this, "Do you want to clear all data in table ?");
+        if (i == 0) {
+            dtm.setRowCount(0);
+        }
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        setExtendedState(MAXIMIZED_BOTH);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
+        btnRemove.doClick();
+    }//GEN-LAST:event_jMenuItem15ActionPerformed
+
+    private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
+        btnAdd.doClick();
+    }//GEN-LAST:event_jMenuItem14ActionPerformed
+
+    private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
+        MakeCustomerOrder make = new MakeCustomerOrder();
+        make.setState(Frame.NORMAL);
+        make.setVisible(true);
+    }//GEN-LAST:event_jMenuItem17ActionPerformed
+
+    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
+        btnAdd.doClick();
+    }//GEN-LAST:event_jMenuItem18ActionPerformed
+
+    private void txtPeriodKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPeriodKeyReleased
+        Validation.limitesIntegers(txtPeriod, 4);        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPeriodKeyReleased
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Windows".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(MakeCustomerOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(MakeCustomerOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(MakeCustomerOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(MakeCustomerOrder.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new MakeCustomerOrder().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAdd;
+    private javax.swing.JButton btnPlace;
+    private javax.swing.JButton btnRemove;
+    private javax.swing.JCheckBox chkNic;
+    private javax.swing.JMenu chkRequestFocuds;
+    private javax.swing.JCheckBox chkWholeSale;
+    private javax.swing.JComboBox comboBatch;
+    private javax.swing.JComboBox comboCategory;
+    private javax.swing.JComboBox comboDesc;
+    private javax.swing.JComboBox comboSerails;
+    private javax.swing.JMenuBar item;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel30;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
+    private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem17;
+    private javax.swing.JMenuItem jMenuItem18;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanel7;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JLabel lblTotal;
+    private javax.swing.JTable tableOrderDetail;
+    private javax.swing.JTextField txtBarcode;
+    private javax.swing.JTextField txtCode;
+    private javax.swing.JTextField txtDiscount;
+    private javax.swing.JTextField txtMinPrice;
+    private javax.swing.JTextField txtMobile;
+    private javax.swing.JTextField txtNIC;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtOID;
+    private javax.swing.JTextField txtPeriod;
+    private javax.swing.JTextField txtQOH;
+    private javax.swing.JTextField txtQty;
+    private javax.swing.JTextField txtSellingPrice;
+    private javax.swing.JTextField txtState;
+    private javax.swing.JTextField txtTotal;
+    private javax.swing.JTextField txtUser;
+    private javax.swing.JTextField txtunit;
+    // End of variables declaration//GEN-END:variables
+
+    private void clearTextFields(int available) {
+        txtQOH.setText(available + "");
+        txtQty.setText("");
+        txtSellingPrice.setText("");
+        txtCode.requestFocus();
+        txtCode.selectAll();
+        if (comboCategory.getSelectedIndex() != 0) {
+            comboCategory.setSelectedIndex(0);
+        }
+    }
+
+    private void addDetail(String uPrice, String qty, Item item) {
+        dtm = (DefaultTableModel) tableOrderDetail.getModel();
+        double amount = Double.parseDouble(uPrice) * Double.parseDouble(qty);
+        Object row[] = {item.getCode(), comboBatch.getSelectedItem(), item.getDesciption(), false, qty, uPrice, amount, "-"};
+        if (tableOrderDetail.getRowCount() == 0) {
+            clearFile();
+        }
+        dtm.addRow(row);
+        saveToFile(row);
+        int available = Integer.parseInt(txtQOH.getText()) - Integer.parseInt(qty);
+        txtQOH.setText(available + "");
+        txtQty.setText("");
+        txtSellingPrice.setText("");
+        txtCode.requestFocus();
+        txtCode.selectAll();
+        if (comboCategory.getSelectedIndex() != 0) {
+            comboCategory.setSelectedIndex(0);
+        }
+    }
+
+    private void fillComboItem() {
+        try {
+            ArrayList<Item> allItems = ItemController.getAllItem();
+            if (allItems != null && !allItems.isEmpty()) {
+                comboDesc.removeAllItems();
+                for (Item item1 : allItems) {
+                    comboDesc.addItem(item1.getDesciption());
+                }
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void fillCatComboItem() {
+        try {
+            ArrayList<Category> categorys = CategoryController.getAllCategory();
+            if (categorys != null && !categorys.isEmpty()) {
+                comboCategory.removeAllItems();
+                comboCategory.addItem(" - Select category - ");
+                categorys.stream().forEach((category) -> {
+                    comboCategory.addItem(category.getName());
+                });
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void setSerialNumbers(String bid) {
+        if (bid != null) {
+            try {
+                ArrayList<DealerSerial> serials = DealerSerialController.getAllDealerSerialByBatch(bid);
+                if (!serials.isEmpty()) {
+                    comboSerails.removeAllItems();
+                    serials.stream().forEach((serial) -> {
+                        comboSerails.addItem(serial.getSerial());
+                    });
+                    setWarrantyPeriods(comboSerails.getSelectedItem().toString(), bid);
+                } else {
+                    comboSerails.removeAllItems();
+                    comboSerails.addItem("SERIAL NOT FOUND !");
+                    txtState.setText("");
+                    txtPeriod.setText("");
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace(new PrintWriter(sw));
+                String trace = sw.toString();
+                LoggerFileAcceess.exceptionLogger(trace);
+            }
+        }
+    }
+
+    private void setWarrantyPeriods(String sn, String bid) {
+        if (sn != null) {
+            try {
+                DealerSerial dealerSerial = DealerSerialController.searchDserialBySerial(sn);
+                if (dealerSerial != null) {
+                    txtPeriod.setText("" + dealerSerial.getPeriod());
+                    Date date = GrnController.getGrnDateByBatch(bid);
+                    txtState.setText(calcRermainDates(dealerSerial.getPeriod(), date));
+                }
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace(new PrintWriter(sw));
+                String trace = sw.toString();
+                LoggerFileAcceess.exceptionLogger(trace);
+            }
+        }
+    }
+
+    private String getDate() {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        return dateFormat.format(date);
+    }
+
+    private String getTime() {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm");
+        return dateFormat.format(date);
+    }
+
+    private int getDateCalc() {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        return Integer.parseInt(dateFormat.format(date));
+    }
+
+    private String calcRermainDates(int period, Date date) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
+        String format = dateFormat.format(date);
+        int i = period - (getDateCalc() - Integer.parseInt(format));
+        if (i <= 0) {
+            txtState.setForeground(Color.RED);
+            return "Warranty expired !";
+        } else {
+            txtState.setForeground(new Color(25, 115, 35));
+            String s = "";
+            if (i > 30) {
+                double j = i / 30.0;
+                int h = i / 30;
+                if (j - h > 0.5) {
+                    h++;
+                }
+                s = "(Apprx. " + h + " months)";
+            }
+            return "Valid for " + i + " days " + s;
+        }
+    }
+
+    private void addorderDetail() {
+        String uPrice = txtunit.getText();
+        String wPrice = txtMinPrice.getText();
+        String qty = txtQty.getText();
+        try {
+            Item item1 = ItemController.searchItemByDesc(comboDesc.getSelectedItem().toString());
+            if (item1 != null && !txtMinPrice.getText().isEmpty() && !txtQOH.getText().isEmpty()) {
+                if (!txtSellingPrice.getText().isEmpty()) {
+                    if (Double.parseDouble(txtMinPrice.getText()) <= Double.parseDouble(txtSellingPrice.getText())
+                            && Double.parseDouble(txtunit.getText()) >= Double.parseDouble(txtSellingPrice.getText())) {
+                        uPrice = txtSellingPrice.getText();
+                        wPrice = txtSellingPrice.getText();
+                    } else {
+                        uPrice = null;
+                        txtSellingPrice.setBackground(new Color(235, 230, 165));
+                        JOptionPane.showMessageDialog(this, "Invalid selling price !\n Price should be in between Rs."
+                                + txtMinPrice.getText() + " & Rs." + txtunit.getText());
+                        txtSellingPrice.requestFocus();
+                        txtSellingPrice.selectAll();
+                    }
+                }
+                boolean contain = false;
+                int index = -1;
+                int oldQty = 0;
+                for (int i = 0; i < tableOrderDetail.getRowCount(); i++) {
+                    if (dtm.getValueAt(i, 1).equals(comboBatch.getSelectedItem())) {
+                        contain = true;
+                        index = i;
+                        oldQty = Integer.parseInt(dtm.getValueAt(i, 4).toString());
+                        break;
+                    }
+                }
+                if (uPrice != null) {
+                    if (Integer.parseInt(txtQty.getText()) > 0
+                            && Integer.parseInt(txtQty.getText()) <= (Integer.parseInt(txtQOH.getText()) + oldQty)) {
+                        if (!contain) {
+                            if (chkWholeSale.isSelected()) {
+                                addDetail(wPrice, qty, item1);
+                            } else {
+                                addDetail(uPrice, qty, item1);
+                            }
+                        } else {
+                            Object[] options = {"Update", "Replace", "Cancel"};
+                            int update = JOptionPane.showOptionDialog(this, "Item is already added from the selected batch.\n"
+                                    + "Do you want to update item quantity ?", "Warning", JOptionPane.CANCEL_OPTION,
+                                    JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+                            if (update == 0) {
+                                int newQty = Integer.parseInt(qty) + oldQty;
+                                if (newQty > (Integer.parseInt(txtQOH.getText())) + oldQty) {
+                                    int totQOH = JOptionPane.showConfirmDialog(this, "Updated quantity exceeds the batch's QOH!\n"
+                                            + "Do you want to add the total QOH ?");
+                                    if (totQOH == 0) {
+                                        dtm.setValueAt(Integer.parseInt(txtQOH.getText()) + oldQty, index, 4);
+                                        updateFile(dtm.getValueAt(index, 1).toString(), dtm.getValueAt(index, 4).toString());
+                                        clearTextFields(0);
+                                    } else {
+                                        txtQty.setBackground(new Color(235, 230, 165));
+                                        txtQty.requestFocus();
+                                        txtQty.selectAll();
+                                    }
+                                } else {
+                                    dtm.setValueAt(newQty, index, 4);
+                                    updateFile(dtm.getValueAt(index, 1).toString(), dtm.getValueAt(index, 4).toString());
+                                    int available = Integer.parseInt(txtQOH.getText()) - Integer.parseInt(qty);
+                                    clearTextFields(available);
+                                }
+                            } else if (update == 1) {
+                                dtm.setValueAt(qty, index, 4);
+                                updateFile(dtm.getValueAt(index, 1).toString(), dtm.getValueAt(index, 4).toString());
+                                int available = Integer.parseInt(txtQOH.getText()) + oldQty - Integer.parseInt(qty);
+                                clearTextFields(available);
+                            }
+                        }
+                    } else {
+                        int newQty = oldQty + Integer.parseInt(txtQOH.getText());
+                        JOptionPane.showMessageDialog(this, "Invalid Quantity!\nMaximum Quantity for the batch is " + newQty);
+                        txtQty.setBackground(new Color(235, 230, 165));
+                        txtQty.requestFocus();
+                        txtQty.selectAll();
+                    }
+                }
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Invalid number insert!   Please check your inputs.");
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void removeTableData() {
+        try {
+            if (tableOrderDetail.getRowCount() > 0) {
+                if (tableOrderDetail.getSelectedRow() != -1) {
+                    String qty;
+                    if (!txtQOH.getText().isEmpty()) {
+                        qty = txtQOH.getText();
+                    } else {
+                        qty = "0";
+                    }
+                    int newQty = Integer.parseInt(dtm.getValueAt(tableOrderDetail.getSelectedRow(), 4).toString())
+                            + Integer.parseInt(qty);
+                    if (!txtQOH.getText().isEmpty()) {
+                        txtQOH.setText(newQty + "");
+                    }
+                    dtm = (DefaultTableModel) tableOrderDetail.getModel();
+                    String[] batch = dtm.getValueAt(tableOrderDetail.getSelectedRow(), 1).toString().split("BT00");
+                    if (hashMap.containsKey(batch[1])) {
+                        hashMap.remove(batch[1]);
+                        try {
+                            if (SERIAL_FILE_ACCESS.deleteBatch(batch[1])) {
+                                System.out.println("batch deleted from file");
+                            } else {
+                                System.out.println("batch delete fail");
+                            }
+                        } catch (IOException ex) {
+                            JOptionPane.showMessageDialog(this, ex.getMessage());
+                            ex.printStackTrace(new PrintWriter(sw));
+                            String trace = sw.toString();
+                            LoggerFileAcceess.exceptionLogger(trace);
+                        }
+                    }
+                    deleteFileEntry(dtm.getValueAt(tableOrderDetail.getSelectedRow(), 1).toString());
+                    dtm.removeRow(tableOrderDetail.getSelectedRow());
+                } else {
+                    Toolkit.getDefaultToolkit().beep();
+                    JOptionPane.showMessageDialog(this, "Please select a table data to delete !");
+                }
+            } else {
+                Toolkit.getDefaultToolkit().beep();
+            }
+        } catch (NumberFormatException | HeadlessException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private boolean checkSellingPrice() {
+        boolean b = false;
+        if (!txtSellingPrice.getText().isEmpty()) {
+            if (Double.parseDouble(txtMinPrice.getText()) <= Double.parseDouble(txtSellingPrice.getText())
+                    && Double.parseDouble(txtunit.getText()) >= Double.parseDouble(txtSellingPrice.getText())) {
+                b = true;
+            } else {
+                txtSellingPrice.setBackground(new Color(235, 230, 165));
+                JOptionPane.showMessageDialog(this, "Invalid selling price !");
+                txtSellingPrice.requestFocus();
+                txtSellingPrice.selectAll();
+                b = false;
+            }
+        }
+        return b;
+    }
+
+    public void setSerials(String bID, ArrayList<TempSerial> serialList, String period) {
+        if (hashMap.containsKey(bID)) {
+            try {
+                hashMap.remove(bID);
+                if (SERIAL_FILE_ACCESS.deleteBatch(bID)) {
+                    System.out.println("deleted batch file");
+                } else {
+                    System.out.println("delete batch fail");
+                }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(this, ex.getMessage());
+                ex.printStackTrace(new PrintWriter(sw));
+                String trace = sw.toString();
+                LoggerFileAcceess.exceptionLogger(trace);
+            }
+        }
+        hashMap.put(bID, serialList);
+        try {
+            if (SERIAL_FILE_ACCESS.addSerial(bID, serialList)) {
+                boolean updateOrderWarrenty = FILE_ACCESS.updateOrderWarrenty(period, bID);
+                if (updateOrderWarrenty) {
+                    System.out.println("warranty updated");
+                }
+                System.out.println("batch added");
+            } else {
+                System.out.println("batch add fail");
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+        dtm = (DefaultTableModel) tableOrderDetail.getModel();
+        if (!serialList.isEmpty()) {
+            dtm.setValueAt(true, clickIndex, 3);
+            dtm.setValueAt(period, clickIndex, 7);
+        } else {
+            dtm.setValueAt(false, clickIndex, 3);
+            dtm.setValueAt("-", clickIndex, 7);
+        }
+    }
+
+    private void calcTotal() {
+        try {
+            double total = 0.0;
+            if (tableOrderDetail.getRowCount() > 0) {
+                dtm = (DefaultTableModel) tableOrderDetail.getModel();
+                for (int i = 0; i < tableOrderDetail.getRowCount(); i++) {
+                    total += Double.parseDouble(dtm.getValueAt(i, 6).toString());
+                }
+            } else {
+                total = 0.0;
+            }
+            txtTotal.setText(Double.toString(total));
+            if (!txtDiscount.getText().isEmpty()) {
+                total -= Double.valueOf(txtDiscount.getText());
+            }
+            lblTotal.setText("Rs. " + total);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private boolean placeOrder(Orders order, ArrayList<OrderDetail> list) {
+        boolean isSaved = false;
+        try {
+            dtm = (DefaultTableModel) tableOrderDetail.getModel();
+            int addOrder = OrderController.addOrder(order);
+            if (addOrder > 0) {
+                int count = 0;
+                for (int i = 0; i < list.size(); i++) {
+                    int added = OrderDetailController.addOrderDetail(list.get(i));
+                    if (added > 0) {
+                        count++;
+                        if (dtm.getValueAt(i, 3).toString().equals("true")) {
+                            String[] split = dtm.getValueAt(i, 1).toString().split("BT00");
+                            ArrayList<TempSerial> get = hashMap.get(split[1]);
+                            for (TempSerial serial : get) {
+                                int addSerial = CustomerSerialController.addCustomerSerial(new CustomerSerial(0,
+                                        serial.getSerial(), Integer.parseInt(serial.getTag1()),
+                                        Integer.parseInt(serial.getTag2()), added, serial.getPeriod()));
+                                if (addSerial > 0) {
+                                    System.out.println(added + serial.getSerial());
+                                }
+                            }
+                        }
+                    }
+                }
+                isSaved = (count == list.size());
+            }
+            Customer searchCustomerByID = CustomerController.searchCustomerByID(order.getCusId());
+            if (searchCustomerByID == null) {
+                customer2 = new Customer(1, "Annonimous", 0, "0V");
+            } else {
+                customer2 = searchCustomerByID;
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+        return isSaved;
+    }
+
+    private void saveToFile(Object[] row) {
+        try {
+            String s = "false";
+            if (chkWholeSale.isSelected()) {
+                s = "true";
+            }
+            TempOrder order = new TempOrder(row[0].toString(), row[1].toString(), row[2].toString(),
+                    row[3].toString(), row[4].toString(), row[5].toString(), row[6].toString(), s, row[7].toString(), 1);
+            boolean isAdded = FILE_ACCESS.addorderdetail(order, s);
+            if (isAdded) {
+                System.out.println("file ok");
+            } else {
+                System.out.println("file err");
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void updateFile(String batch, String qty) {
+        try {
+            boolean updateOrder = FILE_ACCESS.updateOrder(qty, batch);
+            if (updateOrder) {
+                System.out.println("file updated");
+            } else {
+                System.out.println("update fail");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void deleteFileEntry(String bid) {
+        try {
+            boolean deleteEntry = FILE_ACCESS.deleteEntry(bid);
+            if (deleteEntry) {
+                System.out.println("file entry deleted");
+            } else {
+                System.out.println("file entry delete fail");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void clearFile() {
+        try {
+            boolean deleteAll = FILE_ACCESS.deleteAll();
+            boolean deleteAll1 = SERIAL_FILE_ACCESS.deleteAll();
+            if (deleteAll && deleteAll1) {
+                System.out.println("file cleard");
+            } else {
+                System.out.println("file clear fail");
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void getNewOrderId() throws SQLException, ClassNotFoundException {
+        String newId = IdGenerator.getNewId(1);
+        txtOID.setText(newId);
+    }
+
+}

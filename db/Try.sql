@@ -1,0 +1,1 @@
+Select i.code,i.serial,i.description,i.catid,i.rol from supplier s, grn g, grndetail gd, batch b, Item i where s.id=g.sid && g.id=gd.grnid && gd.bid=b.id && b.code=i.code && s.company like concat('%a%');

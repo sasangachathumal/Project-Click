@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<queryString language="SQL">
+		<![CDATA[select u.username as UserName, u.type as Type, sum(o.amount) as Total, count(o.id) as OrderCount from User u, orders o where u.id=o.uid group by u.id;]]>
+	</queryString>
+	<field name="UserName" class="java.lang.String"/>
+	<field name="Type" class="java.lang.String"/>
+	<field name="Total" class="java.math.BigDecimal"/>
+	<field name="OrderCount" class="java.lang.Long"/>
+	<group name="UserName">
+		<groupExpression><![CDATA[$F{UserName}]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="93" splitType="Stretch">
+			<staticText>
+				<reportElement x="139" y="48" width="396" height="17"/>
+				<textElement>
+					<font fontName="Arial" isBold="false" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[Brand new and second hand computers, laptops, computer accessories and repairs.]]></text>
+			</staticText>
+			<line>
+				<reportElement x="9" y="83" width="538" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="142" y="24" width="266" height="24"/>
+				<textElement>
+					<font fontName="Neuropol X Rg" size="18" isBold="true" isItalic="true" isUnderline="false" isStrikeThrough="false"/>
+				</textElement>
+				<text><![CDATA[Click Computers]]></text>
+			</staticText>
+			<line>
+				<reportElement x="9" y="84" width="538" height="1"/>
+			</line>
+			<image>
+				<reportElement x="13" y="20" width="126" height="58"/>
+				<imageExpression><![CDATA["C:\\Windows\\BlackMask\\CMD\\AppData\\Image\\logo\\logo.jpg"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="35" splitType="Stretch">
+			<staticText>
+				<reportElement x="14" y="3" width="252" height="23"/>
+				<textElement>
+					<font fontName="Arial" size="18" isBold="true" isItalic="false" isUnderline="false"/>
+				</textElement>
+				<text><![CDATA[USER SALES REPORT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="312" y="6" width="100" height="20"/>
+				<textElement textAlignment="Right">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Date : ]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="414" y="6" width="129" height="20"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<staticText>
+				<reportElement x="37" y="2" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[UserName]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="151" y="2" width="100" height="20"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Type]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="2" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[No. of Orders]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="2" width="124" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<line>
+				<reportElement x="15" y="1" width="528" height="1"/>
+			</line>
+			<line>
+				<reportElement x="15" y="22" width="528" height="1"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<textField>
+				<reportElement x="36" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{UserName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="259" y="0" width="100" height="20"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{OrderCount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="0" width="124" height="20"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="151" y="0" width="100" height="20"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{Type}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="15" y="21" width="528" height="1"/>
+				<graphicElement>
+					<pen lineStyle="Dotted" lineColor="#999999"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="549" splitType="Stretch">
+			<pieChart>
+				<chart>
+					<reportElement x="110" y="261" width="341" height="266"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{UserName}]]></keyExpression>
+					<valueExpression><![CDATA[$F{Total}]]></valueExpression>
+				</pieDataset>
+				<piePlot isCircular="true">
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+			<staticText>
+				<reportElement x="167" y="244" width="232" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[USER vs ORDER COUNT]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="163" y="529" width="232" height="17"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<text><![CDATA[USER vs ORDER TOTAL]]></text>
+			</staticText>
+			<pieChart>
+				<chart>
+					<reportElement x="110" y="0" width="341" height="244"/>
+					<chartTitle/>
+					<chartSubtitle/>
+					<chartLegend/>
+				</chart>
+				<pieDataset>
+					<keyExpression><![CDATA[$F{UserName}]]></keyExpression>
+					<valueExpression><![CDATA[$F{OrderCount}]]></valueExpression>
+				</pieDataset>
+				<piePlot>
+					<plot/>
+					<itemLabel/>
+				</piePlot>
+			</pieChart>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="30" splitType="Stretch">
+			<line>
+				<reportElement x="11" y="5" width="533" height="1"/>
+			</line>
+			<staticText>
+				<reportElement x="190" y="7" width="177" height="20"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8" isItalic="true"/>
+				</textElement>
+				<text><![CDATA[BLACK MASK SOLUTIONS]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,1859 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the temp.................................
+ */
+package biz.project.cms.view.main;
+
+import AppPackage.AnimationClass;
+import biz.project.cms.controller.AccountsController;
+import biz.project.cms.controller.BatchController;
+import biz.project.cms.controller.ItemController;
+import biz.project.cms.controller.UserLogerController;
+import biz.project.cms.controller.dbConnection.DBConnection;
+import biz.project.cms.fileaccess.AccountDaysCloseOrNotFileAccess;
+import biz.project.cms.fileaccess.LoggerFileAcceess;
+import biz.project.cms.model.Accounts;
+import biz.project.cms.model.Item;
+import biz.project.cms.model.User;
+import biz.project.cms.model.UserLoger;
+import biz.project.cms.other.DBbackup;
+import biz.project.cms.view.Item.AddItem;
+import biz.project.cms.view.Item.DamageItem;
+import biz.project.cms.view.Item.ManageItems;
+import biz.project.cms.view.Item.ROL;
+import biz.project.cms.view.Item.ViewDamage_ReturnItem;
+import biz.project.cms.view.Jobs.CreateNewJob;
+import biz.project.cms.view.Jobs.ManageJob;
+import biz.project.cms.view.accounts.CloseDay;
+import biz.project.cms.view.accounts.ManageAccounts;
+import biz.project.cms.view.accounts.StartDay;
+import biz.project.cms.view.accounts.VewAccountDetails;
+import biz.project.cms.view.accounts.ViewExpences;
+import biz.project.cms.view.accounts.ViewIncome;
+import biz.project.cms.view.accounts.ViewProfit;
+import biz.project.cms.view.customer.CustomerCheques;
+import biz.project.cms.view.customer.CustomerReturnIf;
+import biz.project.cms.view.customer.ManageCustom;
+import biz.project.cms.view.grn.GRNs;
+import biz.project.cms.view.grn.GrnPayyments;
+import biz.project.cms.view.grn.MakeGrn;
+import biz.project.cms.view.grn.UpdateGRN;
+import biz.project.cms.view.order.CustomerOrder;
+import biz.project.cms.view.order.MakeCustomerOrder;
+import biz.project.cms.view.order.ViewOrders;
+import biz.project.cms.view.other.BalanceSheet;
+import biz.project.cms.view.other.MonthlySale;
+import biz.project.cms.view.other.MonthlyService;
+import biz.project.cms.view.other.TotalSale;
+import biz.project.cms.view.other.About;
+import biz.project.cms.view.supplier.ManageSup;
+import biz.project.cms.view.supplier.MyCheques;
+import biz.project.cms.view.user.AddUser;
+import biz.project.cms.view.user.ManagePassword;
+import biz.project.cms.view.user.UserLog;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.HeadlessException;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
+import javax.swing.UIManager;
+import javax.swing.plaf.basic.BasicMenuBarUI;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.view.JasperViewer;
+
+/**
+ *
+ * @author Harsh
+ */
+public class HomeFrame extends javax.swing.JFrame {
+
+    private final AnimationClass ac1;
+    private final AnimationClass ac2;
+    private boolean running;
+    public static User user;
+    public static int userLoggerID;
+    private MakeCustomerOrder order;
+    private Timer timer;
+    private final AccountDaysCloseOrNotFileAccess access;
+
+    /**
+     * Creates new form HomeFrame
+     */
+    public HomeFrame() {
+        initComponents();//
+        this.setIconImage(new ImageIcon(getClass().getResource("/image/Home/Logo Company.png")).getImage());
+        UIManager UI = new UIManager();
+        UI.put("OptionPane.background", Color.white);
+        UI.put("Panel.background", Color.white);
+        //
+        access = new AccountDaysCloseOrNotFileAccess();
+        HomePanel hp = new HomePanel();
+        panelLoad.removeAll();
+        hp.setSize(panelLoad.getSize());
+        panelLoad.add(hp);
+        panelLoad.repaint();
+        panelLoad.revalidate();
+
+        designerCode();
+        ac1 = new AnimationClass();
+        ac2 = new AnimationClass();
+        running = true;
+        jMenuItem40.setEnabled(false);
+        ReOrderLevel();
+        setExtendedState(MAXIMIZED_BOTH);
+        txtKey.requestFocus();
+    }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        animationClass1 = new AppPackage.AnimationClass();
+        jMenu6 = new javax.swing.JMenu();
+        jPanel5 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        btnManageJob = new javax.swing.JButton();
+        btnMakeOrder = new javax.swing.JButton();
+        btnMakeJob = new javax.swing.JButton();
+        btnReturn = new javax.swing.JButton();
+        btnMakeGrn = new javax.swing.JButton();
+        btnManageOrder = new javax.swing.JButton();
+        labelROLBlink = new javax.swing.JLabel();
+        iconLabel = new javax.swing.JLabel();
+        text2Label = new javax.swing.JLabel();
+        text1Label = new javax.swing.JLabel();
+        btnManageGrn = new javax.swing.JButton();
+        jPanel4 = new javax.swing.JPanel();
+        logoutButton = new javax.swing.JButton();
+        typeImageLabel = new javax.swing.JLabel();
+        nameLabel = new javax.swing.JLabel();
+        typeLabel = new javax.swing.JLabel();
+        panelLoad = new javax.swing.JPanel();
+        txtKey = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        menuBar = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenu12 = new javax.swing.JMenu();
+        jMenuItem39 = new javax.swing.JMenuItem();
+        jMenuItem40 = new javax.swing.JMenuItem();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem8 = new javax.swing.JMenuItem();
+        jMenuItem38 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem30 = new javax.swing.JMenuItem();
+        jMenuItem32 = new javax.swing.JMenuItem();
+        jMenuItem21 = new javax.swing.JMenuItem();
+        jMenuItem = new javax.swing.JMenuItem();
+        jMenuItem37 = new javax.swing.JMenuItem();
+        jMenu4 = new javax.swing.JMenu();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        jMenuItem27 = new javax.swing.JMenuItem();
+        jMenu7 = new javax.swing.JMenu();
+        jMenuItem15 = new javax.swing.JMenuItem();
+        jMenuItem16 = new javax.swing.JMenuItem();
+        jMenuItem20 = new javax.swing.JMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jMenuItem13 = new javax.swing.JMenuItem();
+        jMenuItem14 = new javax.swing.JMenuItem();
+        jMenuItem17 = new javax.swing.JMenuItem();
+        jMenuItem18 = new javax.swing.JMenuItem();
+        jMenuItem19 = new javax.swing.JMenuItem();
+        jMenu10 = new javax.swing.JMenu();
+        jMenuItem31 = new javax.swing.JMenuItem();
+        jMenuItem28 = new javax.swing.JMenuItem();
+        jMenuItem29 = new javax.swing.JMenuItem();
+        jSeparator2 = new javax.swing.JPopupMenu.Separator();
+        jMenu11 = new javax.swing.JMenu();
+        jMenuItem35 = new javax.swing.JMenuItem();
+        jMenuItem36 = new javax.swing.JMenuItem();
+        jSeparator3 = new javax.swing.JPopupMenu.Separator();
+        menuReports = new javax.swing.JMenu();
+        jMenuItem7 = new javax.swing.JMenuItem();
+        jMenuItem5 = new javax.swing.JMenuItem();
+        jMenuItem6 = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenuItem12 = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem3 = new javax.swing.JMenuItem();
+        menuAdmin = new javax.swing.JMenu();
+        jMenu5 = new javax.swing.JMenu();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
+        jMenu8 = new javax.swing.JMenu();
+        jMenuItem22 = new javax.swing.JMenuItem();
+        jMenuItem23 = new javax.swing.JMenuItem();
+        jMenuItem24 = new javax.swing.JMenuItem();
+        jMenuItem25 = new javax.swing.JMenuItem();
+        jMenuItem26 = new javax.swing.JMenuItem();
+        jMenu9 = new javax.swing.JMenu();
+        jMenuItem33 = new javax.swing.JMenuItem();
+        jMenuItem34 = new javax.swing.JMenuItem();
+        jMenu3 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+
+        jMenu6.setText("jMenu6");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        setTitle("Click - Stock Management System");
+        setBackground(new java.awt.Color(51, 51, 51));
+        setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        setMinimumSize(new java.awt.Dimension(1120, 740));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
+
+        jPanel5.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel5.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanel5.setPreferredSize(new java.awt.Dimension(1024, 740));
+
+        jPanel3.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel3.setMinimumSize(new java.awt.Dimension(0, 0));
+        jPanel3.setPreferredSize(new java.awt.Dimension(250, 720));
+
+        jPanel2.setBackground(new java.awt.Color(0, 51, 51));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel3.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(137, 149, 137));
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("Alt + F8");
+        jPanel2.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 294, 60, 30));
+
+        jLabel4.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(137, 149, 137));
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel4.setText("Alt + F7");
+        jPanel2.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 364, 60, 30));
+
+        jLabel5.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(137, 149, 137));
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel5.setText("Alt + F6");
+        jPanel2.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 430, 60, 30));
+
+        jLabel6.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(137, 149, 137));
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("Alt + F5");
+        jPanel2.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 504, 60, 30));
+
+        jLabel7.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(137, 149, 137));
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel7.setText("Alt + F9");
+        jPanel2.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 224, 60, 30));
+
+        jLabel8.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel8.setForeground(new java.awt.Color(137, 149, 137));
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel8.setText("Alt + F11");
+        jPanel2.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 153, 60, 30));
+
+        jLabel9.setFont(new java.awt.Font("Arial", 3, 14)); // NOI18N
+        jLabel9.setForeground(new java.awt.Color(137, 149, 137));
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Alt + F12");
+        jPanel2.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(172, 78, 60, 30));
+
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 1.png"))); // NOI18N
+        btnManageJob.setText(" ");
+        btnManageJob.setContentAreaFilled(false);
+        btnManageJob.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnManageJob.setDisabledIcon(null);
+        btnManageJob.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 2.png"))); // NOI18N
+        btnManageJob.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageJobActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnManageJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 430, 250, 75));
+
+        btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png"))); // NOI18N
+        btnMakeOrder.setText(" ");
+        btnMakeOrder.setContentAreaFilled(false);
+        btnMakeOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMakeOrder.setDisabledIcon(null);
+        btnMakeOrder.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 2.png"))); // NOI18N
+        btnMakeOrder.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnMakeOrderMouseClicked(evt);
+            }
+        });
+        btnMakeOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMakeOrderActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnMakeOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 250, 75));
+
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 1.png"))); // NOI18N
+        btnMakeJob.setText(" ");
+        btnMakeJob.setContentAreaFilled(false);
+        btnMakeJob.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMakeJob.setDisabledIcon(null);
+        btnMakeJob.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 2.png"))); // NOI18N
+        btnMakeJob.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMakeJobActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnMakeJob, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 150, 250, 75));
+
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 1.png"))); // NOI18N
+        btnReturn.setText(" ");
+        btnReturn.setContentAreaFilled(false);
+        btnReturn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnReturn.setDisabledIcon(null);
+        btnReturn.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 2.png"))); // NOI18N
+        btnReturn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReturnActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnReturn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 220, 250, 75));
+
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 1.png"))); // NOI18N
+        btnMakeGrn.setText(" ");
+        btnMakeGrn.setContentAreaFilled(false);
+        btnMakeGrn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMakeGrn.setDisabledIcon(null);
+        btnMakeGrn.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 2.png"))); // NOI18N
+        btnMakeGrn.setVerifyInputWhenFocusTarget(false);
+        btnMakeGrn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMakeGrnActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnMakeGrn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 290, 250, 75));
+
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png"))); // NOI18N
+        btnManageOrder.setText(" ");
+        btnManageOrder.setContentAreaFilled(false);
+        btnManageOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnManageOrder.setDisabledIcon(null);
+        btnManageOrder.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 2.png"))); // NOI18N
+        btnManageOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageOrderActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnManageOrder, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 360, 250, 75));
+
+        labelROLBlink.setFont(new java.awt.Font("Rod", 0, 30)); // NOI18N
+        labelROLBlink.setForeground(new java.awt.Color(73, 132, 68));
+        labelROLBlink.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        labelROLBlink.setText("0");
+        labelROLBlink.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        labelROLBlink.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        labelROLBlink.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                labelROLBlinkMouseEntered(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                labelROLBlinkMouseReleased(evt);
+            }
+        });
+        jPanel2.add(labelROLBlink, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 40, 40));
+
+        iconLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Animation small 1.png"))); // NOI18N
+        iconLabel.setToolTipText("DOUBLE CLICK - OVERVIEW");
+        iconLabel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                iconLabelMouseMoved(evt);
+            }
+        });
+        iconLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                iconLabelMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                iconLabelMouseExited(evt);
+            }
+        });
+        jPanel2.add(iconLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 240, 80));
+
+        text2Label.setFont(new java.awt.Font("Berlin Sans FB", 0, 14)); // NOI18N
+        text2Label.setForeground(new java.awt.Color(153, 153, 153));
+        text2Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jPanel2.add(text2Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 150, 30));
+
+        text1Label.setFont(new java.awt.Font("Berlin Sans FB", 0, 24)); // NOI18N
+        text1Label.setForeground(new java.awt.Color(51, 153, 255));
+        text1Label.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jPanel2.add(text1Label, new org.netbeans.lib.awtextra.AbsoluteConstraints(111, 26, 120, 30));
+
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 1.png"))); // NOI18N
+        btnManageGrn.setText(" ");
+        btnManageGrn.setContentAreaFilled(false);
+        btnManageGrn.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnManageGrn.setDisabledIcon(null);
+        btnManageGrn.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 2.png"))); // NOI18N
+        btnManageGrn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnManageGrnActionPerformed(evt);
+            }
+        });
+        jPanel2.add(btnManageGrn, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 500, 250, 75));
+
+        jPanel4.setBackground(new java.awt.Color(51, 51, 51));
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        logoutButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/logOut.png"))); // NOI18N
+        logoutButton.setContentAreaFilled(false);
+        logoutButton.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        logoutButton.setRolloverIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/logOut After.png"))); // NOI18N
+        logoutButton.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                logoutButtonMouseMoved(evt);
+            }
+        });
+        logoutButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                logoutButtonMouseExited(evt);
+            }
+        });
+        logoutButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                logoutButtonActionPerformed(evt);
+            }
+        });
+        jPanel4.add(logoutButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(-170, -4, 170, 80));
+
+        typeImageLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/User_Big_1.png"))); // NOI18N
+        typeImageLabel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseMoved(java.awt.event.MouseEvent evt) {
+                typeImageLabelMouseMoved(evt);
+            }
+        });
+        typeImageLabel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                typeImageLabelMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                typeImageLabelMouseExited(evt);
+            }
+        });
+        typeImageLabel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentMoved(java.awt.event.ComponentEvent evt) {
+                typeImageLabelComponentMoved(evt);
+            }
+        });
+        jPanel4.add(typeImageLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(6, 6, 220, 60));
+
+        nameLabel.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        nameLabel.setText("NULL");
+        jPanel4.add(nameLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 10, -1, 30));
+
+        typeLabel.setBackground(new java.awt.Color(255, 255, 255));
+        typeLabel.setFont(new java.awt.Font("sansserif", 0, 14)); // NOI18N
+        typeLabel.setForeground(new java.awt.Color(255, 255, 255));
+        typeLabel.setText("NULL");
+        jPanel4.add(typeLabel, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 40, -1, 20));
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(0, 10, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(jPanel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        panelLoad.setBackground(new java.awt.Color(255, 255, 255));
+        panelLoad.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        panelLoad.setMinimumSize(new java.awt.Dimension(774, 720));
+        panelLoad.setPreferredSize(new java.awt.Dimension(774, 720));
+        panelLoad.setLayout(new javax.swing.BoxLayout(panelLoad, javax.swing.BoxLayout.LINE_AXIS));
+
+        txtKey.setFont(new java.awt.Font("sansserif", 0, 18)); // NOI18N
+        txtKey.setForeground(new java.awt.Color(5, 5, 58));
+        txtKey.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtKey.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 2, true));
+        txtKey.setSelectionColor(new java.awt.Color(91, 125, 63));
+        txtKey.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtKeyFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtKeyFocusLost(evt);
+            }
+        });
+        txtKey.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtKeyActionPerformed(evt);
+            }
+        });
+        txtKey.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtKeyKeyReleased(evt);
+            }
+        });
+
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 20)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(153, 153, 153));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Search...");
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/search_overlay_search_icon.png"))); // NOI18N
+        jLabel2.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        jLabel2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                jLabel2MouseReleased(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
+        jPanel5.setLayout(jPanel5Layout);
+        jPanel5Layout.setHorizontalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(panelLoad, javax.swing.GroupLayout.DEFAULT_SIZE, 775, Short.MAX_VALUE)
+                        .addContainerGap())
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtKey, javax.swing.GroupLayout.PREFERRED_SIZE, 333, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jLabel2)
+                        .addGap(23, 23, 23))))
+        );
+        jPanel5Layout.setVerticalGroup(
+            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
+            .addGroup(jPanel5Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtKey)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 43, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(panelLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        menuBar.setBackground(new java.awt.Color(255, 255, 255));
+        menuBar.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        menuBar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        menuBar.setFont(new java.awt.Font("sansserif", 1, 14)); // NOI18N
+        menuBar.setMaximumSize(new java.awt.Dimension(32769, 32769));
+        menuBar.setMinimumSize(new java.awt.Dimension(1024, 35));
+        menuBar.setPreferredSize(new java.awt.Dimension(1024, 35));
+
+        jMenu1.setText("File");
+        jMenu1.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenu12.setText("Backup & Restore");
+
+        jMenuItem39.setText("Backup");
+        jMenuItem39.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem39ActionPerformed(evt);
+            }
+        });
+        jMenu12.add(jMenuItem39);
+
+        jMenuItem40.setText("Restore");
+        jMenuItem40.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem40ActionPerformed(evt);
+            }
+        });
+        jMenu12.add(jMenuItem40);
+
+        jMenu1.add(jMenu12);
+        jMenu1.add(jSeparator4);
+
+        jMenuItem8.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_W, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem8.setText("Logout");
+        jMenuItem8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem8ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem8);
+
+        jMenuItem38.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem38.setText("Exit");
+        jMenuItem38.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem38ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem38);
+
+        menuBar.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenu2.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenuItem30.setText("Manage Customer");
+        jMenuItem30.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem30ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem30);
+
+        jMenuItem32.setText("Manage Supplier");
+        jMenuItem32.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem32ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem32);
+
+        jMenuItem21.setText("Manage Account");
+        jMenuItem21.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem21ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem21);
+
+        jMenuItem.setText("Start Day");
+        jMenuItem.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem);
+
+        jMenuItem37.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_INSERT, 0));
+        jMenuItem37.setText("Search Items");
+        jMenuItem37.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem37ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem37);
+
+        menuBar.add(jMenu2);
+
+        jMenu4.setText("Tools");
+        jMenu4.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenuItem9.setText("Change My Password");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem9);
+
+        jMenuItem27.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_SPACE, java.awt.event.InputEvent.CTRL_MASK));
+        jMenuItem27.setText("Calculator");
+        jMenuItem27.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem27ActionPerformed(evt);
+            }
+        });
+        jMenu4.add(jMenuItem27);
+
+        menuBar.add(jMenu4);
+
+        jMenu7.setText("Stock");
+        jMenu7.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenuItem15.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem15.setText("New GRN");
+        jMenuItem15.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem15ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem15);
+
+        jMenuItem16.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F5, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem16.setText("Update GRN");
+        jMenuItem16.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem16ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem16);
+
+        jMenuItem20.setText("GRN Paymnet");
+        jMenuItem20.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem20ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem20);
+        jMenu7.add(jSeparator1);
+
+        jMenuItem13.setText("Manage Item");
+        jMenuItem13.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem13ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem13);
+
+        jMenuItem14.setText("Add Item ");
+        jMenuItem14.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem14ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem14);
+
+        jMenuItem17.setText("View Damage / Return");
+        jMenuItem17.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem17ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem17);
+
+        jMenuItem18.setText("Damage Item");
+        jMenuItem18.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem18ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem18);
+
+        jMenuItem19.setText("ROL");
+        jMenuItem19.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem19ActionPerformed(evt);
+            }
+        });
+        jMenu7.add(jMenuItem19);
+
+        menuBar.add(jMenu7);
+
+        jMenu10.setText("Orders");
+        jMenu10.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenuItem31.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F12, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem31.setText("Make Order");
+        jMenuItem31.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem31ActionPerformed(evt);
+            }
+        });
+        jMenu10.add(jMenuItem31);
+
+        jMenuItem28.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem28.setText("Manage Orders");
+        jMenuItem28.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem28ActionPerformed(evt);
+            }
+        });
+        jMenu10.add(jMenuItem28);
+
+        jMenuItem29.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem29.setText("Order Returns");
+        jMenuItem29.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem29ActionPerformed(evt);
+            }
+        });
+        jMenu10.add(jMenuItem29);
+        jMenu10.add(jSeparator2);
+
+        menuBar.add(jMenu10);
+
+        jMenu11.setText("Jobs");
+        jMenu11.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenuItem35.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F11, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem35.setText("New Job");
+        jMenuItem35.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem35ActionPerformed(evt);
+            }
+        });
+        jMenu11.add(jMenuItem35);
+
+        jMenuItem36.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, java.awt.event.InputEvent.ALT_MASK));
+        jMenuItem36.setText("Manage Job");
+        jMenuItem36.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem36ActionPerformed(evt);
+            }
+        });
+        jMenu11.add(jMenuItem36);
+        jMenu11.add(jSeparator3);
+
+        menuBar.add(jMenu11);
+
+        menuReports.setText("Reports");
+        menuReports.setEnabled(false);
+        menuReports.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenuItem7.setText("Total Sales - Day");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        menuReports.add(jMenuItem7);
+
+        jMenuItem5.setText("Monthly Orders");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        menuReports.add(jMenuItem5);
+
+        jMenuItem6.setText("Monthly Services");
+        jMenuItem6.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem6ActionPerformed(evt);
+            }
+        });
+        menuReports.add(jMenuItem6);
+
+        jMenuItem2.setText("Stock");
+        jMenuItem2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem2ActionPerformed(evt);
+            }
+        });
+        menuReports.add(jMenuItem2);
+
+        jMenuItem12.setText("Balance sheet");
+        jMenuItem12.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem12ActionPerformed(evt);
+            }
+        });
+        menuReports.add(jMenuItem12);
+
+        jMenuItem4.setText("ROL - Items");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        menuReports.add(jMenuItem4);
+
+        jMenuItem3.setText("User Sales");
+        jMenuItem3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem3ActionPerformed(evt);
+            }
+        });
+        menuReports.add(jMenuItem3);
+
+        menuBar.add(menuReports);
+
+        menuAdmin.setText("Administration");
+        menuAdmin.setEnabled(false);
+        menuAdmin.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenu5.setText("User");
+
+        jMenuItem10.setText("Add New User");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem10);
+
+        jMenuItem11.setText("User Log");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu5.add(jMenuItem11);
+
+        menuAdmin.add(jMenu5);
+
+        jMenu8.setText("Accounts");
+
+        jMenuItem22.setText("Close Day");
+        jMenuItem22.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem22ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem22);
+
+        jMenuItem23.setText("View Account Detail");
+        jMenuItem23.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem23ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem23);
+
+        jMenuItem24.setText("View Expences");
+        jMenuItem24.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem24ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem24);
+
+        jMenuItem25.setText("View Income");
+        jMenuItem25.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem25ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem25);
+
+        jMenuItem26.setText("View Profit");
+        jMenuItem26.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem26ActionPerformed(evt);
+            }
+        });
+        jMenu8.add(jMenuItem26);
+
+        menuAdmin.add(jMenu8);
+
+        jMenu9.setText("Cheques");
+
+        jMenuItem33.setText("Customer Cheques");
+        jMenuItem33.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem33ActionPerformed(evt);
+            }
+        });
+        jMenu9.add(jMenuItem33);
+
+        jMenuItem34.setText("My Cheques");
+        jMenuItem34.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem34ActionPerformed(evt);
+            }
+        });
+        jMenu9.add(jMenuItem34);
+
+        menuAdmin.add(jMenu9);
+
+        menuBar.add(menuAdmin);
+
+        jMenu3.setText("Help");
+        jMenu3.setFont(new java.awt.Font("sansserif", 0, 15)); // NOI18N
+
+        jMenuItem1.setBackground(new java.awt.Color(255, 255, 255));
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Logo Company16.png"))); // NOI18N
+        jMenuItem1.setText("About Us");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu3.add(jMenuItem1);
+
+        menuBar.add(jMenu3);
+
+        setJMenuBar(menuBar);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 1037, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, 648, Short.MAX_VALUE)
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void btnManageJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageJobActionPerformed
+        ManageJob mj = new ManageJob();
+        panelLoad.removeAll();
+        mj.setSize(panelLoad.getSize());
+        panelLoad.add(mj);
+        panelLoad.repaint();
+        panelLoad.revalidate();
+
+        btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png")));
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 1.png")));
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 1.png")));
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 1.png")));
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png")));
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 3.png")));
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 1.png")));    }//GEN-LAST:event_btnManageJobActionPerformed
+
+    private void btnMakeOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMakeOrderActionPerformed
+        btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png")));
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 1.png")));
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 1.png")));
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 1.png")));
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png")));
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 1.png")));
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 1.png")));
+
+        new CustomerOrder().setVisible(true);
+
+//        setState(ICONIFIED);
+    }//GEN-LAST:event_btnMakeOrderActionPerformed
+
+    private void btnMakeJobActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMakeJobActionPerformed
+        btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png")));
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 3.png")));
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 1.png")));
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 1.png")));
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png")));
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 1.png")));
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 1.png")));
+
+        CreateNewJob job = new CreateNewJob();
+        panelLoad.removeAll();
+        job.setSize(panelLoad.getSize());
+        panelLoad.add(job);
+        panelLoad.repaint();
+        panelLoad.revalidate();
+    }//GEN-LAST:event_btnMakeJobActionPerformed
+
+    private void btnReturnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnActionPerformed
+        btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png")));
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 1.png")));
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 3.png")));
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 1.png")));
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png")));
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 1.png")));
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 1.png")));
+
+        CustomerReturnIf cri = new CustomerReturnIf();
+        panelLoad.removeAll();
+        cri.setSize(panelLoad.getSize());
+        panelLoad.add(cri);
+        panelLoad.repaint();
+        panelLoad.revalidate();
+    }//GEN-LAST:event_btnReturnActionPerformed
+
+    private void btnMakeGrnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMakeGrnActionPerformed
+        btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png")));
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 1.png")));
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 1.png")));
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 3.png")));
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png")));
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 1.png")));
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 1.png")));
+
+        MakeGrn grns = new MakeGrn();
+        panelLoad.removeAll();
+        grns.setSize(panelLoad.getSize());
+        panelLoad.add(grns);
+        panelLoad.repaint();
+        panelLoad.revalidate();
+    }//GEN-LAST:event_btnMakeGrnActionPerformed
+
+    private void btnManageOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageOrderActionPerformed
+        btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png")));
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 1.png")));
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 1.png")));
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 1.png")));
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 3.png")));
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 1.png")));
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 1.png")));
+
+        ViewOrders vo = new ViewOrders();
+        panelLoad.removeAll();
+        vo.setSize(panelLoad.getSize());
+        panelLoad.add(vo);
+        panelLoad.repaint();
+        panelLoad.revalidate();
+    }//GEN-LAST:event_btnManageOrderActionPerformed
+
+    private void logoutButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutButtonActionPerformed
+        int i = JOptionPane.showConfirmDialog(this, "Are you sure you want to logout ?", "Message", JOptionPane.YES_NO_OPTION, 1);
+        if (i == 0) {
+            logout();
+            new LoginFrame().setVisible(true);
+            dispose();
+        }
+    }//GEN-LAST:event_logoutButtonActionPerformed
+
+    private void iconLabelMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconLabelMouseMoved
+
+    }//GEN-LAST:event_iconLabelMouseMoved
+
+    private void iconLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconLabelMouseExited
+
+    }//GEN-LAST:event_iconLabelMouseExited
+
+    private void logoutButtonMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseMoved
+
+    }//GEN-LAST:event_logoutButtonMouseMoved
+
+    private void logoutButtonMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logoutButtonMouseExited
+
+
+    }//GEN-LAST:event_logoutButtonMouseExited
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        new About(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void btnMakeOrderMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnMakeOrderMouseClicked
+        //jButton3.setRolloverSelectedIcon(new ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png")));
+    }//GEN-LAST:event_btnMakeOrderMouseClicked
+
+    private void typeImageLabelMouseMoved(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_typeImageLabelMouseMoved
+        running = false;
+        new Thread() {
+            @Override
+            public void run() {
+                ac2.jButtonXRight(-170, 0, 5, 1, logoutButton);
+                ac2.jLabelXRight(6, 180, 5, 1, typeImageLabel);
+            }
+        }.start();
+    }//GEN-LAST:event_typeImageLabelMouseMoved
+
+    private void typeImageLabelMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_typeImageLabelMouseEntered
+    }//GEN-LAST:event_typeImageLabelMouseEntered
+
+    private void typeImageLabelMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_typeImageLabelMouseExited
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                ac1.jButtonXLeft(0, -170, 5, 1, logoutButton);
+                ac1.jLabelXLeft(180, 6, 5, 1, typeImageLabel);
+            }
+        }, 5000);
+    }//GEN-LAST:event_typeImageLabelMouseExited
+
+    private void typeImageLabelComponentMoved(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_typeImageLabelComponentMoved
+        if (typeImageLabel.getX() == 6) {
+            nameLabel.setVisible(true);
+            typeLabel.setVisible(true);
+            running = true;
+            ReOrderLevel();
+        } else {
+            nameLabel.setVisible(false);
+            typeLabel.setVisible(false);
+        }
+    }//GEN-LAST:event_typeImageLabelComponentMoved
+
+    private void btnManageGrnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnManageGrnActionPerformed
+        btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png")));
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 1.png")));
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 1.png")));
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 1.png")));
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png")));
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 1.png")));
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 3.png")));
+
+        UpdateGRN grns = new UpdateGRN();
+        panelLoad.removeAll();
+        grns.setSize(panelLoad.getSize());
+        panelLoad.add(grns);
+        panelLoad.repaint();
+        panelLoad.revalidate();
+
+    }//GEN-LAST:event_btnManageGrnActionPerformed
+
+    private void jMenuItem2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem2ActionPerformed
+        printStock();
+    }//GEN-LAST:event_jMenuItem2ActionPerformed
+
+    private void printStock() {
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            Connection conn = DBConnection.getDBConnection().getConnection();
+            JasperReport compileReport = JasperCompileManager.compileReport(getClass()
+                    .getResourceAsStream("/reports/stock.jrxml"));
+            map.put("USER", HomeFrame.user.getUsername());
+            JasperPrint fillReport = JasperFillManager.fillReport(compileReport, map, conn);
+            JasperViewer.viewReport(fillReport, false);
+        } catch (ClassNotFoundException | SQLException | JRException ex) {
+            StringWriter sw = new StringWriter();
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
+        printUserSale();
+    }//GEN-LAST:event_jMenuItem3ActionPerformed
+
+    private void jMenuItem4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem4ActionPerformed
+        printROL();
+    }//GEN-LAST:event_jMenuItem4ActionPerformed
+    private void printROL() {
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            Connection conn = DBConnection.getDBConnection().getConnection();
+            JasperReport compileReport = JasperCompileManager.compileReport(getClass()
+                    .getResourceAsStream("/reports/rol.jrxml"));
+            map.put("USER", HomeFrame.user.getUsername());
+            JasperPrint fillReport = JasperFillManager.fillReport(compileReport, map, conn);
+            JasperViewer.viewReport(fillReport, false);
+        } catch (ClassNotFoundException | SQLException | JRException ex) {
+            StringWriter sw = new StringWriter();
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+    private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
+        new MonthlySale(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem5ActionPerformed
+
+    private void jMenuItem6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem6ActionPerformed
+        new MonthlyService(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem6ActionPerformed
+
+    private void jMenuItem7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem7ActionPerformed
+        new TotalSale(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem7ActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        int i = JOptionPane.showConfirmDialog(this, "Are you sure you want to exit ?", "Message", JOptionPane.YES_NO_OPTION, 1);
+        if (i == 0) {
+            logout();
+            System.exit(0);
+        }
+    }//GEN-LAST:event_formWindowClosing
+
+    private void labelROLBlinkMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelROLBlinkMouseReleased
+        new ROL(this, true).setVisible(true);
+    }//GEN-LAST:event_labelROLBlinkMouseReleased
+
+    private void labelROLBlinkMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelROLBlinkMouseEntered
+        setROL();
+    }//GEN-LAST:event_labelROLBlinkMouseEntered
+
+    private void jMenuItem9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem9ActionPerformed
+        ManagePassword mp = new ManagePassword(this, true);
+        mp.setHome(this);
+        mp.setVisible(true);
+    }//GEN-LAST:event_jMenuItem9ActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        new AddUser(order, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        new UserLog(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
+
+    private void jMenuItem12ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem12ActionPerformed
+        new BalanceSheet(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem12ActionPerformed
+
+    private void jMenuItem13ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem13ActionPerformed
+        new ManageItems(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem13ActionPerformed
+
+    private void jMenuItem14ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem14ActionPerformed
+        new AddItem(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem14ActionPerformed
+
+    private void jMenuItem15ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem15ActionPerformed
+        btnMakeGrn.doClick();
+    }//GEN-LAST:event_jMenuItem15ActionPerformed
+
+    private void jMenuItem16ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem16ActionPerformed
+        btnManageGrn.doClick();
+    }//GEN-LAST:event_jMenuItem16ActionPerformed
+
+    private void jMenuItem17ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem17ActionPerformed
+        new ViewDamage_ReturnItem(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem17ActionPerformed
+
+    private void jMenuItem18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem18ActionPerformed
+        new DamageItem(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem18ActionPerformed
+
+    private void jMenuItem19ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem19ActionPerformed
+        new ROL(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem19ActionPerformed
+
+    private void jMenuItem21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem21ActionPerformed
+        new ManageAccounts(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem21ActionPerformed
+
+    private void jMenuItem22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem22ActionPerformed
+        new CloseDay(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem22ActionPerformed
+
+    private void jMenuItem23ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem23ActionPerformed
+        new VewAccountDetails().setVisible(true);
+    }//GEN-LAST:event_jMenuItem23ActionPerformed
+
+    private void jMenuItem24ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem24ActionPerformed
+        new ViewExpences(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem24ActionPerformed
+
+    private void jMenuItem25ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem25ActionPerformed
+        new ViewIncome(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem25ActionPerformed
+
+    private void jMenuItem26ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem26ActionPerformed
+        new ViewProfit(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem26ActionPerformed
+
+    private void jMenuItem20ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem20ActionPerformed
+        new GrnPayyments(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem20ActionPerformed
+
+    private void jMenuItem28ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem28ActionPerformed
+       btnManageOrder.doClick();
+    }//GEN-LAST:event_jMenuItem28ActionPerformed
+
+    private void jMenuItem29ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem29ActionPerformed
+        btnReturn.doClick();
+    }//GEN-LAST:event_jMenuItem29ActionPerformed
+
+    private void jMenuItem30ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem30ActionPerformed
+        new ManageCustom(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem30ActionPerformed
+
+    private void jMenuItem27ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem27ActionPerformed
+        Runtime rs = Runtime.getRuntime();
+        try {
+            rs.exec("calc");
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Sorry!!! Your system calculator is crashed.\nTry to open manually");
+        }
+    }//GEN-LAST:event_jMenuItem27ActionPerformed
+
+    private void jMenuItem31ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem31ActionPerformed
+        btnMakeOrder.doClick();
+    }//GEN-LAST:event_jMenuItem31ActionPerformed
+
+    private void jMenuItem32ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem32ActionPerformed
+        new ManageSup(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem32ActionPerformed
+
+    private void jMenuItem33ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem33ActionPerformed
+        new CustomerCheques(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem33ActionPerformed
+
+    private void jMenuItem34ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem34ActionPerformed
+        new MyCheques(this, true).setVisible(true);
+    }//GEN-LAST:event_jMenuItem34ActionPerformed
+
+    private void jMenuItem35ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem35ActionPerformed
+        btnMakeJob.doClick();
+    }//GEN-LAST:event_jMenuItem35ActionPerformed
+
+    private void jMenuItem36ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem36ActionPerformed
+        btnManageJob.doClick();
+    }//GEN-LAST:event_jMenuItem36ActionPerformed
+
+    private void jMenuItem8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem8ActionPerformed
+        logoutButton.doClick();
+    }//GEN-LAST:event_jMenuItem8ActionPerformed
+
+    private void jMenuItem38ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem38ActionPerformed
+        logout();
+        System.exit(0);
+    }//GEN-LAST:event_jMenuItem38ActionPerformed
+
+    private void jMenuItem39ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem39ActionPerformed
+        backup();
+    }//GEN-LAST:event_jMenuItem39ActionPerformed
+
+    private void backup() {
+        try {
+            JFileChooser chooser = new JFileChooser();
+            chooser.showSaveDialog(this);
+            File file = chooser.getSelectedFile();
+            String path = file.getAbsolutePath();
+            int res = DBbackup.writeBackup(path);
+            if (res >= 0) {
+                JOptionPane.showMessageDialog(this, "Successfully backed up your data...!", "Information", 1);
+            } else {
+                JOptionPane.showMessageDialog(this, "Fail to backup data.", "Information", 0);
+            }
+        } catch (HeadlessException | IOException | InterruptedException ex) {
+            Logger.getLogger(HomeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NullPointerException e) {
+        }
+    }
+
+    private void jMenuItem40ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem40ActionPerformed
+        restore();
+    }//GEN-LAST:event_jMenuItem40ActionPerformed
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        checkDayStart();
+    }//GEN-LAST:event_formWindowOpened
+
+    private void jMenuItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemActionPerformed
+        checkTodayStart();
+    }//GEN-LAST:event_jMenuItemActionPerformed
+
+    private void txtKeyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtKeyActionPerformed
+        if (!txtKey.getText().isEmpty()) {
+            try {
+                ItemSearch itemSearch = new ItemSearch(null, true);
+                if (txtKey.getText().toLowerCase().startsWith("it")) {
+                    itemSearch.rCode.setSelected(true);
+                }
+                itemSearch.txtKey.setText(txtKey.getText().toLowerCase());
+                itemSearch.search(txtKey.getText().toLowerCase());
+                itemSearch.setVisible(true);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(ItemSearch.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            getToolkit().beep();
+        }
+    }//GEN-LAST:event_txtKeyActionPerformed
+
+    private void txtKeyKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtKeyKeyReleased
+
+    }//GEN-LAST:event_txtKeyKeyReleased
+
+    private void txtKeyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtKeyFocusGained
+        txtKey.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 153, 153), 1, true));
+        txtKey.selectAll();
+    }//GEN-LAST:event_txtKeyFocusGained
+
+    private void txtKeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtKeyFocusLost
+        txtKey.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(204, 204, 204), 2, true));
+        //txtKey.setText("");// TODO add your handling code here:
+    }//GEN-LAST:event_txtKeyFocusLost
+
+    private void jLabel2MouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel2MouseReleased
+        if (!txtKey.getText().isEmpty()) {
+            try {
+                ItemSearch itemSearch = new ItemSearch(null, true);
+                if (txtKey.getText().toLowerCase().startsWith("it")) {
+                    itemSearch.rCode.setSelected(true);
+                }
+                itemSearch.txtKey.setText(txtKey.getText().toLowerCase());
+                itemSearch.search(txtKey.getText().toLowerCase());
+                itemSearch.setVisible(true);
+            } catch (ClassNotFoundException | SQLException ex) {
+                Logger.getLogger(ItemSearch.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
+            getToolkit().beep();
+        }
+    }//GEN-LAST:event_jLabel2MouseReleased
+
+    private void jMenuItem37ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem37ActionPerformed
+        txtKey.requestFocus();
+        txtKey.selectAll();
+    }//GEN-LAST:event_jMenuItem37ActionPerformed
+
+    private void iconLabelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconLabelMouseClicked
+        if (evt.getClickCount() == 2 && !evt.isConsumed()) {
+            evt.consume();
+            HomePanel hp = new HomePanel();
+            panelLoad.removeAll();
+            hp.setSize(panelLoad.getSize());
+            panelLoad.add(hp);
+            panelLoad.repaint();
+            panelLoad.revalidate();
+            btnMakeOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Order 1.png")));
+        btnMakeJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make Job 1.png")));
+        btnReturn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Returns 1.png")));
+        btnMakeGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Make GRN 1.png")));
+        btnManageOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Order 1.png")));
+        btnManageJob.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Job 1.png")));
+        btnManageGrn.setIcon(new javax.swing.ImageIcon(getClass().getResource("/image/Home/Manage Grn 1.png")));
+        }
+    }//GEN-LAST:event_iconLabelMouseClicked
+
+    private void restore() throws HeadlessException {
+        JFileChooser chooser = new JFileChooser();
+        chooser.showOpenDialog(this);
+        File file = chooser.getSelectedFile();
+        String path = file.getAbsolutePath();
+        int res;
+        try {
+            res = DBbackup.restoreBackup(path);
+            if (res == 0) {
+                JOptionPane.showMessageDialog(this, "Successfully restored your backup data...!", "Information", 1);
+            } else {
+                JOptionPane.showMessageDialog(this, "Fail to restore data.\nYour backup file is currupted !", "Information", 0);
+            }
+        } catch (IOException | InterruptedException | HeadlessException ex) {
+            StringWriter sw = new StringWriter();
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        } catch (NullPointerException e) {
+        }
+    }
+
+    private String getDate() {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("YYYY-MM-dd");
+        return dateFormat.format(date);
+    }
+
+    private String getTime() {
+        Date date = new Date();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("hh:mm:ss");
+        return dateFormat.format(date);
+    }
+
+    private void checkDayStart() {
+        try {
+            ArrayList<Accounts> getAllAccount = AccountsController.getAllAccount();
+            if (getAllAccount.isEmpty()) {
+                new StartDay(this, true).setVisible(true);
+            } else {
+                AccountDaysCloseOrNotFileAccess access = new AccountDaysCloseOrNotFileAccess();
+                String[] allAccount = access.getAllAccount();
+                if (allAccount != null) {
+                    if (!allAccount[0].equals(getDate())) {
+                        if (allAccount[1].equals("0")) {
+                            new CloseDay(this, true, "passDay").setVisible(true);
+                        } else {
+                            new StartDay(this, true).setVisible(true);
+                        }
+                    }
+                }
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(HomeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(HomeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void printUserSale() {
+        HashMap<String, Object> map = new HashMap<>();
+        try {
+            Connection conn = DBConnection.getDBConnection().getConnection();
+            JasperReport compileReport = JasperCompileManager.compileReport(getClass()
+                    .getResourceAsStream("/reports/usersale.jrxml"));
+            map.put("USER", HomeFrame.user.getUsername());
+            JasperPrint fillReport = JasperFillManager.fillReport(compileReport, map, conn);
+            JasperViewer.viewReport(fillReport, false);
+        } catch (ClassNotFoundException | SQLException | JRException ex) {
+            StringWriter sw = new StringWriter();
+            JOptionPane.showMessageDialog(this, ex.getMessage());
+            ex.printStackTrace(new PrintWriter(sw));
+            String trace = sw.toString();
+            LoggerFileAcceess.exceptionLogger(trace);
+        }
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(HomeFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(HomeFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(HomeFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(HomeFrame.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new HomeFrame().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private AppPackage.AnimationClass animationClass1;
+    private javax.swing.JButton btnMakeGrn;
+    private javax.swing.JButton btnMakeJob;
+    private javax.swing.JButton btnMakeOrder;
+    private javax.swing.JButton btnManageGrn;
+    private javax.swing.JButton btnManageJob;
+    private javax.swing.JButton btnManageOrder;
+    private javax.swing.JButton btnReturn;
+    private javax.swing.JLabel iconLabel;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu10;
+    private javax.swing.JMenu jMenu11;
+    private javax.swing.JMenu jMenu12;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenu jMenu3;
+    private javax.swing.JMenu jMenu4;
+    private javax.swing.JMenu jMenu5;
+    private javax.swing.JMenu jMenu6;
+    private javax.swing.JMenu jMenu7;
+    private javax.swing.JMenu jMenu8;
+    private javax.swing.JMenu jMenu9;
+    private javax.swing.JMenuItem jMenuItem;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
+    private javax.swing.JMenuItem jMenuItem12;
+    private javax.swing.JMenuItem jMenuItem13;
+    private javax.swing.JMenuItem jMenuItem14;
+    private javax.swing.JMenuItem jMenuItem15;
+    private javax.swing.JMenuItem jMenuItem16;
+    private javax.swing.JMenuItem jMenuItem17;
+    private javax.swing.JMenuItem jMenuItem18;
+    private javax.swing.JMenuItem jMenuItem19;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JMenuItem jMenuItem20;
+    private javax.swing.JMenuItem jMenuItem21;
+    private javax.swing.JMenuItem jMenuItem22;
+    private javax.swing.JMenuItem jMenuItem23;
+    private javax.swing.JMenuItem jMenuItem24;
+    private javax.swing.JMenuItem jMenuItem25;
+    private javax.swing.JMenuItem jMenuItem26;
+    private javax.swing.JMenuItem jMenuItem27;
+    private javax.swing.JMenuItem jMenuItem28;
+    private javax.swing.JMenuItem jMenuItem29;
+    private javax.swing.JMenuItem jMenuItem3;
+    private javax.swing.JMenuItem jMenuItem30;
+    private javax.swing.JMenuItem jMenuItem31;
+    private javax.swing.JMenuItem jMenuItem32;
+    private javax.swing.JMenuItem jMenuItem33;
+    private javax.swing.JMenuItem jMenuItem34;
+    private javax.swing.JMenuItem jMenuItem35;
+    private javax.swing.JMenuItem jMenuItem36;
+    private javax.swing.JMenuItem jMenuItem37;
+    private javax.swing.JMenuItem jMenuItem38;
+    private javax.swing.JMenuItem jMenuItem39;
+    private javax.swing.JMenuItem jMenuItem4;
+    private javax.swing.JMenuItem jMenuItem40;
+    private javax.swing.JMenuItem jMenuItem5;
+    private javax.swing.JMenuItem jMenuItem6;
+    private javax.swing.JMenuItem jMenuItem7;
+    private javax.swing.JMenuItem jMenuItem8;
+    private javax.swing.JMenuItem jMenuItem9;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JPanel jPanel5;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JPopupMenu.Separator jSeparator2;
+    private javax.swing.JPopupMenu.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
+    private javax.swing.JLabel labelROLBlink;
+    private javax.swing.JButton logoutButton;
+    private javax.swing.JMenu menuAdmin;
+    private javax.swing.JMenuBar menuBar;
+    private javax.swing.JMenu menuReports;
+    private javax.swing.JLabel nameLabel;
+    private javax.swing.JPanel panelLoad;
+    private javax.swing.JLabel text1Label;
+    private javax.swing.JLabel text2Label;
+    public static javax.swing.JTextField txtKey;
+    private javax.swing.JLabel typeImageLabel;
+    private javax.swing.JLabel typeLabel;
+    // End of variables declaration//GEN-END:variables
+
+    private void ReOrderLevel() {
+
+        setROL();
+        new Thread() {
+            @Override
+            public void run() {
+                for (int i = 0; i < 3; i++) {
+                    if (running) {
+                        switch (i) {
+                            case 0:
+                                labelROLBlink.setVisible(true);
+                                try {
+                                    Thread.sleep(500);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(HomePanel.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                break;
+                            case 1:
+                                labelROLBlink.setVisible(false);
+                                try {
+                                    Thread.sleep(1000);
+                                } catch (InterruptedException ex) {
+                                    Logger.getLogger(HomePanel.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                                i = -1;
+                                break;
+                        }
+                    }
+                }
+            }
+        }.start();
+    }
+
+    private void designerCode() {
+        //
+        UIManager UI = new UIManager();
+        UI.put("OptionPane.background", Color.white);
+        UI.put("Panel.background", Color.white);
+        //
+
+        //--------------
+        menuBar.setOpaque(true);
+        menuBar.setUI(new BasicMenuBarUI() {
+            @Override
+            public void paint(Graphics g, JComponent c) {
+                g.setColor(Color.gray);
+                g.fillRect(0, 0, c.getWidth(), c.getHeight());
+            }
+        });
+        //---------------
+        setLocationRelativeTo(null);
+        //setExtendedState(MAXIMIZED_BOTH);
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+        if (user == null) {
+            user = new User(0, "null", "null", "null");
+        } else if (user.getType().equals("admin")) {
+            menuAdmin.setEnabled(true);
+            menuReports.setEnabled(true);
+            jMenuItem40.setEnabled(true);
+        }
+        nameLabel.setText(user.getUsername());
+        typeLabel.setText(user.getType());
+        try {
+            UserLogerController.addLogerDetail(new UserLoger(0, user.getUsername(), null, null, null, null));
+            userLoggerID = UserLogerController.getLoggerID();
+            System.out.println(userLoggerID);
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(HomeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+     private void logout() {
+        try {
+            UserLogerController.updateLogerDetail(new UserLoger(userLoggerID, null, null, null, null, null));
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(HomeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        user = null;
+    }
+
+    private void setROL() {
+        try {
+            int i = 0;
+            ArrayList<Item> itemList = ItemController.getAllItem();
+            if (itemList != null) {
+                for (Item item : itemList) {
+                    String qoh = BatchController.getQOH(item.getCode());
+                    if (qoh != null) {
+                        if (item.getRol() >= Integer.valueOf(qoh)) {
+                            i++;
+                        }
+                    }
+
+                }
+            }
+            labelROLBlink.setText(i + "");
+            if (i == 0) {
+                running = false;
+                labelROLBlink.setVisible(false);
+            }
+        } catch (ClassNotFoundException | SQLException ex) {
+            Logger.getLogger(HomeFrame.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    private void checkTodayStart() {
+        try {
+            String[] allAccount = access.getAllAccount();
+            if (!allAccount[0].equals(getDate())) {
+                if (!allAccount[1].equals("1")) {
+                    new StartDay(this, true).setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Already in started !!!", "Message", 2);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Already in started !!!", "Message", 2);
+            }
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(StartDay.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+}
